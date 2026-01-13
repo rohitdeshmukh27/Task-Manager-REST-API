@@ -76,13 +76,13 @@ export const getTaskById = async(
     next: NextFunction
 ): Promise<void> => {
     try{
-        const {id} = req.params;
+        const id = req.params.id as string;
 
         const {data,error}=await TaskService.getTaskById(id);
 
         if(error || !data){
             const response: ApiResponse<null> ={
-                success: false;
+                success: false,
                 message: "Task not found",
                 error: `No task found with id: ${id}`,
             };
@@ -156,7 +156,7 @@ export const updateTask = async (
     next:NextFunction
 ): Promise<void> => {
     try{
-        const {id} = req.params;
+         const id = req.params.id as string;
         const updates: UpdateTaskDTO = req.body;
 
         //check if task exists first
@@ -205,7 +205,7 @@ export const deleteTask = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { id } = req.params;
+         const id = req.params.id as string;
 
         const { data, error } = await TaskService.deleteTask(id);
 
