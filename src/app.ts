@@ -6,7 +6,6 @@ import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
 import taskRoutes from "./routes/taskRoutes";
 import { errorHandler, notFoundHanler } from "./middleware/errorHandler";
-import { timeStamp } from "node:console";
 
 // load en var first
 dotenv.config();
@@ -29,7 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // request loggin middleware
 app.use((req: Request, res: Response, next) => {
-  console.log(`[${timeStamp}] ${req.method} ${req.url}`);
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
   next();
 });
 
@@ -81,7 +81,7 @@ app.get("/api", (req: Request, res: Response) => {
       { method: "DELETE", path: "/api/tasks/:id", description: "Delete task" },
     ],
     queryParams: {
-      status: "Filter by status (pending, in-progress, completed)",
+      status: "Filter by status (pending, in-process, completed)",
       priority: "Filter by priority (low, medium, high)",
       search: "Search in title and description",
       sort_by: "Sort by field (created_at, updated_at, due_date, priority)",

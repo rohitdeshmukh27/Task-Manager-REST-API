@@ -3,6 +3,7 @@
 ## 📋 Real-World Implementation Guide
 
 Build a **production-ready Task Manager REST API** using:
+
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
@@ -15,14 +16,14 @@ Build a **production-ready Task Manager REST API** using:
 
 # 🎯 Why Supabase?
 
-| Feature | Benefit |
-|---------|---------|
-| **PostgreSQL** | Industry-standard relational database |
-| **Free Tier** | 500MB database, unlimited API requests |
-| **Auto-generated API** | REST + GraphQL out of the box |
-| **Real-time** | Live data subscriptions |
-| **Authentication** | Built-in user management |
-| **Dashboard** | Visual database management |
+| Feature                | Benefit                                |
+| ---------------------- | -------------------------------------- |
+| **PostgreSQL**         | Industry-standard relational database  |
+| **Free Tier**          | 500MB database, unlimited API requests |
+| **Auto-generated API** | REST + GraphQL out of the box          |
+| **Real-time**          | Live data subscriptions                |
+| **Authentication**     | Built-in user management               |
+| **Dashboard**          | Visual database management             |
 
 ---
 
@@ -297,15 +298,15 @@ npm install -D typescript ts-node-dev @types/express @types/node @types/uuid
 
 ### Package Explanation:
 
-| Package | Purpose |
-|---------|---------|
-| `express` | Web framework for Node.js |
-| `@supabase/supabase-js` | Supabase JavaScript client |
-| `dotenv` | Load environment variables from .env |
-| `uuid` | Generate unique IDs |
-| `typescript` | TypeScript compiler |
-| `ts-node-dev` | Run TypeScript with hot reload |
-| `@types/*` | TypeScript type definitions |
+| Package                 | Purpose                              |
+| ----------------------- | ------------------------------------ |
+| `express`               | Web framework for Node.js            |
+| `@supabase/supabase-js` | Supabase JavaScript client           |
+| `dotenv`                | Load environment variables from .env |
+| `uuid`                  | Generate unique IDs                  |
+| `typescript`            | TypeScript compiler                  |
+| `ts-node-dev`           | Run TypeScript with hot reload       |
+| `@types/*`              | TypeScript type definitions          |
 
 ---
 
@@ -462,21 +463,21 @@ mkdir src\routes
 // SUPABASE CLIENT CONFIGURATION
 // ============================================
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();
 
 // Get environment variables
-const supabaseUrl: string = process.env.SUPABASE_URL || '';
-const supabaseAnonKey: string = process.env.SUPABASE_ANON_KEY || '';
+const supabaseUrl: string = process.env.SUPABASE_URL || "";
+const supabaseAnonKey: string = process.env.SUPABASE_ANON_KEY || "";
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('❌ Missing Supabase environment variables!');
-    console.error('Make sure SUPABASE_URL and SUPABASE_ANON_KEY are set in .env');
-    process.exit(1);
+  console.error("❌ Missing Supabase environment variables!");
+  console.error("Make sure SUPABASE_URL and SUPABASE_ANON_KEY are set in .env");
+  process.exit(1);
 }
 
 // Create Supabase client
@@ -486,11 +487,12 @@ const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 export default supabase;
 
 // Log connection status (for debugging)
-console.log('✅ Supabase client initialized');
+console.log("✅ Supabase client initialized");
 console.log(`📍 Connected to: ${supabaseUrl}`);
 ```
 
 ### 💡 Key Concepts:
+
 - **dotenv** = Loads `.env` file into `process.env`
 - **createClient** = Supabase SDK function to create client
 - **process.exit(1)** = Exit app if config is missing
@@ -509,26 +511,26 @@ console.log(`📍 Connected to: ${supabaseUrl}`);
 /**
  * Priority levels for tasks
  */
-export type Priority = 'low' | 'medium' | 'high';
+export type Priority = "low" | "medium" | "high";
 
 /**
  * Status of a task
  */
-export type TaskStatus = 'pending' | 'in-progress' | 'completed';
+export type TaskStatus = "pending" | "in-progress" | "completed";
 
 /**
  * Main Task interface
  * Matches the database schema exactly
  */
 export interface Task {
-    id: string;              // UUID from database
-    title: string;           // Task title (required)
-    description: string | null; // Optional description
-    status: TaskStatus;      // Current status
-    priority: Priority;      // Priority level
-    due_date: string | null; // ISO date string or null
-    created_at: string;      // ISO timestamp
-    updated_at: string;      // ISO timestamp
+  id: string; // UUID from database
+  title: string; // Task title (required)
+  description: string | null; // Optional description
+  status: TaskStatus; // Current status
+  priority: Priority; // Priority level
+  due_date: string | null; // ISO date string or null
+  created_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
 }
 
 /**
@@ -536,10 +538,10 @@ export interface Task {
  * Only includes fields that can be set by the user
  */
 export interface CreateTaskDTO {
-    title: string;           // Required
-    description?: string;    // Optional
-    priority?: Priority;     // Optional (defaults to 'medium')
-    due_date?: string;       // Optional (ISO date string)
+  title: string; // Required
+  description?: string; // Optional
+  priority?: Priority; // Optional (defaults to 'medium')
+  due_date?: string; // Optional (ISO date string)
 }
 
 /**
@@ -547,53 +549,54 @@ export interface CreateTaskDTO {
  * All fields are optional
  */
 export interface UpdateTaskDTO {
-    title?: string;
-    description?: string;
-    status?: TaskStatus;
-    priority?: Priority;
-    due_date?: string;
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: Priority;
+  due_date?: string;
 }
 
 /**
  * Query parameters for filtering tasks
  */
 export interface TaskQueryParams {
-    status?: TaskStatus;
-    priority?: Priority;
-    search?: string;
-    sort_by?: 'created_at' | 'updated_at' | 'due_date' | 'priority';
-    order?: 'asc' | 'desc';
-    limit?: number;
-    offset?: number;
+  status?: TaskStatus;
+  priority?: Priority;
+  search?: string;
+  sort_by?: "created_at" | "updated_at" | "due_date" | "priority";
+  order?: "asc" | "desc";
+  limit?: number;
+  offset?: number;
 }
 
 /**
  * API Response wrapper for consistent responses
  */
 export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data?: T;
-    error?: string;
-    count?: number;  // For paginated responses
+  success: boolean;
+  message: string;
+  data?: T;
+  error?: string;
+  count?: number; // For paginated responses
 }
 
 /**
  * Database error type
  */
 export interface DatabaseError {
-    code: string;
-    message: string;
-    details?: string;
+  code: string;
+  message: string;
+  details?: string;
 }
 ```
 
 ### 💡 Database vs Interface:
-| Database Column | Interface Property | Note |
-|-----------------|-------------------|------|
-| `due_date` | `due_date` | Match exactly! |
-| `created_at` | `created_at` | PostgreSQL returns ISO string |
-| NULL values | `string \| null` | TypeScript union type |
+
+| Database Column | Interface Property | Note                          |
+| --------------- | ------------------ | ----------------------------- |
+| `due_date`      | `due_date`         | Match exactly!                |
+| `created_at`    | `created_at`       | PostgreSQL returns ISO string |
+| NULL values     | `string \| null`   | TypeScript union type         |
 
 ---
 
@@ -606,207 +609,209 @@ export interface DatabaseError {
 // TASK SERVICE - Database Operations
 // ============================================
 
-import supabase from '../config/supabase';
+import supabase from "../config/supabase";
 import {
-    Task,
-    CreateTaskDTO,
-    UpdateTaskDTO,
-    TaskQueryParams,
-} from '../interfaces/task.interface';
+  Task,
+  CreateTaskDTO,
+  UpdateTaskDTO,
+  TaskQueryParams,
+} from "../interfaces/task.interface";
 
 // Table name constant
-const TABLE_NAME = 'tasks';
+const TABLE_NAME = "tasks";
 
 /**
  * Get all tasks with optional filtering, sorting, and pagination
  */
 export const getAllTasks = async (
-    params: TaskQueryParams = {}
+  params: TaskQueryParams = {}
 ): Promise<{ data: Task[] | null; error: any; count: number | null }> => {
-    // Start building query
-    let query = supabase
-        .from(TABLE_NAME)
-        .select('*', { count: 'exact' }); // Get total count
+  // Start building query
+  let query = supabase.from(TABLE_NAME).select("*", { count: "exact" }); // Get total count
 
-    // Apply filters
-    if (params.status) {
-        query = query.eq('status', params.status);
-    }
+  // Apply filters
+  if (params.status) {
+    query = query.eq("status", params.status);
+  }
 
-    if (params.priority) {
-        query = query.eq('priority', params.priority);
-    }
+  if (params.priority) {
+    query = query.eq("priority", params.priority);
+  }
 
-    if (params.search) {
-        // Search in title and description (case-insensitive)
-        query = query.or(`title.ilike.%${params.search}%,description.ilike.%${params.search}%`);
-    }
+  if (params.search) {
+    // Search in title and description (case-insensitive)
+    query = query.or(
+      `title.ilike.%${params.search}%,description.ilike.%${params.search}%`
+    );
+  }
 
-    // Apply sorting
-    const sortColumn = params.sort_by || 'created_at';
-    const sortOrder = params.order === 'asc' ? true : false;
-    query = query.order(sortColumn, { ascending: sortOrder });
+  // Apply sorting
+  const sortColumn = params.sort_by || "created_at";
+  const sortOrder = params.order === "asc" ? true : false;
+  query = query.order(sortColumn, { ascending: sortOrder });
 
-    // Apply pagination
-    if (params.limit) {
-        query = query.limit(params.limit);
-    }
+  // Apply pagination
+  if (params.limit) {
+    query = query.limit(params.limit);
+  }
 
-    if (params.offset) {
-        query = query.range(params.offset, params.offset + (params.limit || 10) - 1);
-    }
+  if (params.offset) {
+    query = query.range(
+      params.offset,
+      params.offset + (params.limit || 10) - 1
+    );
+  }
 
-    const { data, error, count } = await query;
+  const { data, error, count } = await query;
 
-    return { data, error, count };
+  return { data, error, count };
 };
 
 /**
  * Get single task by ID
  */
 export const getTaskById = async (
-    id: string
+  id: string
 ): Promise<{ data: Task | null; error: any }> => {
-    const { data, error } = await supabase
-        .from(TABLE_NAME)
-        .select('*')
-        .eq('id', id)
-        .single(); // Expect exactly one row
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .select("*")
+    .eq("id", id)
+    .single(); // Expect exactly one row
 
-    return { data, error };
+  return { data, error };
 };
 
 /**
  * Create new task
  */
 export const createTask = async (
-    taskData: CreateTaskDTO
+  taskData: CreateTaskDTO
 ): Promise<{ data: Task | null; error: any }> => {
-    // Prepare insert data
-    const insertData = {
-        title: taskData.title,
-        description: taskData.description || null,
-        priority: taskData.priority || 'medium',
-        due_date: taskData.due_date || null,
-        status: 'pending', // Default status
-    };
+  // Prepare insert data
+  const insertData = {
+    title: taskData.title,
+    description: taskData.description || null,
+    priority: taskData.priority || "medium",
+    due_date: taskData.due_date || null,
+    status: "pending", // Default status
+  };
 
-    const { data, error } = await supabase
-        .from(TABLE_NAME)
-        .insert(insertData)
-        .select() // Return the inserted row
-        .single();
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .insert(insertData)
+    .select() // Return the inserted row
+    .single();
 
-    return { data, error };
+  return { data, error };
 };
 
 /**
  * Update existing task
  */
 export const updateTask = async (
-    id: string,
-    updates: UpdateTaskDTO
+  id: string,
+  updates: UpdateTaskDTO
 ): Promise<{ data: Task | null; error: any }> => {
-    // Build update object (only include provided fields)
-    const updateData: Partial<Task> = {};
+  // Build update object (only include provided fields)
+  const updateData: Partial<Task> = {};
 
-    if (updates.title !== undefined) updateData.title = updates.title;
-    if (updates.description !== undefined) updateData.description = updates.description;
-    if (updates.status !== undefined) updateData.status = updates.status;
-    if (updates.priority !== undefined) updateData.priority = updates.priority;
-    if (updates.due_date !== undefined) updateData.due_date = updates.due_date;
+  if (updates.title !== undefined) updateData.title = updates.title;
+  if (updates.description !== undefined)
+    updateData.description = updates.description;
+  if (updates.status !== undefined) updateData.status = updates.status;
+  if (updates.priority !== undefined) updateData.priority = updates.priority;
+  if (updates.due_date !== undefined) updateData.due_date = updates.due_date;
 
-    const { data, error } = await supabase
-        .from(TABLE_NAME)
-        .update(updateData)
-        .eq('id', id)
-        .select()
-        .single();
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .update(updateData)
+    .eq("id", id)
+    .select()
+    .single();
 
-    return { data, error };
+  return { data, error };
 };
 
 /**
  * Delete task
  */
 export const deleteTask = async (
-    id: string
+  id: string
 ): Promise<{ data: Task | null; error: any }> => {
-    // First get the task to return it
-    const { data: existingTask } = await getTaskById(id);
+  // First get the task to return it
+  const { data: existingTask } = await getTaskById(id);
 
-    if (!existingTask) {
-        return { data: null, error: { message: 'Task not found' } };
-    }
+  if (!existingTask) {
+    return { data: null, error: { message: "Task not found" } };
+  }
 
-    const { error } = await supabase
-        .from(TABLE_NAME)
-        .delete()
-        .eq('id', id);
+  const { error } = await supabase.from(TABLE_NAME).delete().eq("id", id);
 
-    if (error) {
-        return { data: null, error };
-    }
+  if (error) {
+    return { data: null, error };
+  }
 
-    return { data: existingTask, error: null };
+  return { data: existingTask, error: null };
 };
 
 /**
  * Get task statistics
  */
 export const getTaskStats = async (): Promise<{
-    total: number;
-    pending: number;
-    inProgress: number;
-    completed: number;
+  total: number;
+  pending: number;
+  inProgress: number;
+  completed: number;
 } | null> => {
-    try {
-        const { count: total } = await supabase
-            .from(TABLE_NAME)
-            .select('*', { count: 'exact', head: true });
+  try {
+    const { count: total } = await supabase
+      .from(TABLE_NAME)
+      .select("*", { count: "exact", head: true });
 
-        const { count: pending } = await supabase
-            .from(TABLE_NAME)
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'pending');
+    const { count: pending } = await supabase
+      .from(TABLE_NAME)
+      .select("*", { count: "exact", head: true })
+      .eq("status", "pending");
 
-        const { count: inProgress } = await supabase
-            .from(TABLE_NAME)
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'in-progress');
+    const { count: inProgress } = await supabase
+      .from(TABLE_NAME)
+      .select("*", { count: "exact", head: true })
+      .eq("status", "in-progress");
 
-        const { count: completed } = await supabase
-            .from(TABLE_NAME)
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'completed');
+    const { count: completed } = await supabase
+      .from(TABLE_NAME)
+      .select("*", { count: "exact", head: true })
+      .eq("status", "completed");
 
-        return {
-            total: total || 0,
-            pending: pending || 0,
-            inProgress: inProgress || 0,
-            completed: completed || 0,
-        };
-    } catch (error) {
-        console.error('Error getting stats:', error);
-        return null;
-    }
+    return {
+      total: total || 0,
+      pending: pending || 0,
+      inProgress: inProgress || 0,
+      completed: completed || 0,
+    };
+  } catch (error) {
+    console.error("Error getting stats:", error);
+    return null;
+  }
 };
 ```
 
 ### 💡 Supabase Query Methods:
-| Method | SQL Equivalent | Purpose |
-|--------|---------------|---------|
-| `.select('*')` | `SELECT *` | Get columns |
-| `.eq('col', val)` | `WHERE col = val` | Exact match |
+
+| Method                   | SQL Equivalent            | Purpose                 |
+| ------------------------ | ------------------------- | ----------------------- |
+| `.select('*')`           | `SELECT *`                | Get columns             |
+| `.eq('col', val)`        | `WHERE col = val`         | Exact match             |
 | `.ilike('col', '%val%')` | `WHERE col ILIKE '%val%'` | Case-insensitive search |
-| `.or('...')` | `WHERE ... OR ...` | Multiple conditions |
-| `.order('col')` | `ORDER BY col` | Sort results |
-| `.limit(n)` | `LIMIT n` | Limit rows |
-| `.range(a, b)` | `OFFSET a LIMIT b-a+1` | Pagination |
-| `.insert({})` | `INSERT INTO` | Add row |
-| `.update({})` | `UPDATE ... SET` | Modify row |
-| `.delete()` | `DELETE FROM` | Remove row |
-| `.single()` | - | Expect one row |
+| `.or('...')`             | `WHERE ... OR ...`        | Multiple conditions     |
+| `.order('col')`          | `ORDER BY col`            | Sort results            |
+| `.limit(n)`              | `LIMIT n`                 | Limit rows              |
+| `.range(a, b)`           | `OFFSET a LIMIT b-a+1`    | Pagination              |
+| `.insert({})`            | `INSERT INTO`             | Add row                 |
+| `.update({})`            | `UPDATE ... SET`          | Modify row              |
+| `.delete()`              | `DELETE FROM`             | Remove row              |
+| `.single()`              | -                         | Expect one row          |
 
 ---
 
@@ -819,15 +824,15 @@ export const getTaskStats = async (): Promise<{
 // TASK CONTROLLER - Request Handlers
 // ============================================
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 import {
-    Task,
-    CreateTaskDTO,
-    UpdateTaskDTO,
-    TaskQueryParams,
-    ApiResponse,
-} from '../interfaces/task.interface';
-import * as TaskService from '../services/taskService';
+  Task,
+  CreateTaskDTO,
+  UpdateTaskDTO,
+  TaskQueryParams,
+  ApiResponse,
+} from "../interfaces/task.interface";
+import * as TaskService from "../services/taskService";
 
 // ============================================
 // GET ALL TASKS
@@ -837,45 +842,47 @@ import * as TaskService from '../services/taskService';
  * Query params: ?status=completed&priority=high&search=keyword&sort_by=created_at&order=desc&limit=10&offset=0
  */
 export const getAllTasks = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        // Extract query parameters
-        const queryParams: TaskQueryParams = {
-            status: req.query.status as any,
-            priority: req.query.priority as any,
-            search: req.query.search as string,
-            sort_by: req.query.sort_by as any,
-            order: req.query.order as any,
-            limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-            offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
-        };
+  try {
+    // Extract query parameters
+    const queryParams: TaskQueryParams = {
+      status: req.query.status as any,
+      priority: req.query.priority as any,
+      search: req.query.search as string,
+      sort_by: req.query.sort_by as any,
+      order: req.query.order as any,
+      limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
+      offset: req.query.offset
+        ? parseInt(req.query.offset as string)
+        : undefined,
+    };
 
-        const { data, error, count } = await TaskService.getAllTasks(queryParams);
+    const { data, error, count } = await TaskService.getAllTasks(queryParams);
 
-        if (error) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Failed to fetch tasks',
-                error: error.message,
-            };
-            res.status(500).json(response);
-            return;
-        }
-
-        const response: ApiResponse<Task[]> = {
-            success: true,
-            message: `Found ${data?.length || 0} task(s)`,
-            data: data || [],
-            count: count || 0,
-        };
-
-        res.status(200).json(response);
-    } catch (error) {
-        next(error);
+    if (error) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to fetch tasks",
+        error: error.message,
+      };
+      res.status(500).json(response);
+      return;
     }
+
+    const response: ApiResponse<Task[]> = {
+      success: true,
+      message: `Found ${data?.length || 0} task(s)`,
+      data: data || [],
+      count: count || 0,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ============================================
@@ -885,35 +892,35 @@ export const getAllTasks = async (
  * GET /api/tasks/:id
  */
 export const getTaskById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const { data, error } = await TaskService.getTaskById(id);
+    const { data, error } = await TaskService.getTaskById(id);
 
-        if (error || !data) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Task not found',
-                error: `No task found with ID: ${id}`,
-            };
-            res.status(404).json(response);
-            return;
-        }
-
-        const response: ApiResponse<Task> = {
-            success: true,
-            message: 'Task retrieved successfully',
-            data,
-        };
-
-        res.status(200).json(response);
-    } catch (error) {
-        next(error);
+    if (error || !data) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Task not found",
+        error: `No task found with ID: ${id}`,
+      };
+      res.status(404).json(response);
+      return;
     }
+
+    const response: ApiResponse<Task> = {
+      success: true,
+      message: "Task retrieved successfully",
+      data,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ============================================
@@ -924,35 +931,35 @@ export const getTaskById = async (
  * Body: { title, description?, priority?, due_date? }
  */
 export const createTask = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const taskData: CreateTaskDTO = req.body;
+  try {
+    const taskData: CreateTaskDTO = req.body;
 
-        const { data, error } = await TaskService.createTask(taskData);
+    const { data, error } = await TaskService.createTask(taskData);
 
-        if (error) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Failed to create task',
-                error: error.message,
-            };
-            res.status(400).json(response);
-            return;
-        }
-
-        const response: ApiResponse<Task> = {
-            success: true,
-            message: 'Task created successfully',
-            data: data!,
-        };
-
-        res.status(201).json(response);
-    } catch (error) {
-        next(error);
+    if (error) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to create task",
+        error: error.message,
+      };
+      res.status(400).json(response);
+      return;
     }
+
+    const response: ApiResponse<Task> = {
+      success: true,
+      message: "Task created successfully",
+      data: data!,
+    };
+
+    res.status(201).json(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ============================================
@@ -963,49 +970,49 @@ export const createTask = async (
  * Body: { title?, description?, status?, priority?, due_date? }
  */
 export const updateTask = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const { id } = req.params;
-        const updates: UpdateTaskDTO = req.body;
+  try {
+    const { id } = req.params;
+    const updates: UpdateTaskDTO = req.body;
 
-        // Check if task exists first
-        const { data: existingTask } = await TaskService.getTaskById(id);
+    // Check if task exists first
+    const { data: existingTask } = await TaskService.getTaskById(id);
 
-        if (!existingTask) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Task not found',
-                error: `No task found with ID: ${id}`,
-            };
-            res.status(404).json(response);
-            return;
-        }
-
-        const { data, error } = await TaskService.updateTask(id, updates);
-
-        if (error) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Failed to update task',
-                error: error.message,
-            };
-            res.status(400).json(response);
-            return;
-        }
-
-        const response: ApiResponse<Task> = {
-            success: true,
-            message: 'Task updated successfully',
-            data: data!,
-        };
-
-        res.status(200).json(response);
-    } catch (error) {
-        next(error);
+    if (!existingTask) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Task not found",
+        error: `No task found with ID: ${id}`,
+      };
+      res.status(404).json(response);
+      return;
     }
+
+    const { data, error } = await TaskService.updateTask(id, updates);
+
+    if (error) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to update task",
+        error: error.message,
+      };
+      res.status(400).json(response);
+      return;
+    }
+
+    const response: ApiResponse<Task> = {
+      success: true,
+      message: "Task updated successfully",
+      data: data!,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ============================================
@@ -1015,35 +1022,35 @@ export const updateTask = async (
  * DELETE /api/tasks/:id
  */
 export const deleteTask = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const { data, error } = await TaskService.deleteTask(id);
+    const { data, error } = await TaskService.deleteTask(id);
 
-        if (error || !data) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Task not found',
-                error: `No task found with ID: ${id}`,
-            };
-            res.status(404).json(response);
-            return;
-        }
-
-        const response: ApiResponse<Task> = {
-            success: true,
-            message: 'Task deleted successfully',
-            data,
-        };
-
-        res.status(200).json(response);
-    } catch (error) {
-        next(error);
+    if (error || !data) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Task not found",
+        error: `No task found with ID: ${id}`,
+      };
+      res.status(404).json(response);
+      return;
     }
+
+    const response: ApiResponse<Task> = {
+      success: true,
+      message: "Task deleted successfully",
+      data,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ============================================
@@ -1053,35 +1060,36 @@ export const deleteTask = async (
  * GET /api/tasks/stats
  */
 export const getTaskStats = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const stats = await TaskService.getTaskStats();
+  try {
+    const stats = await TaskService.getTaskStats();
 
-        if (!stats) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Failed to get statistics',
-                error: 'Could not retrieve task statistics',
-            };
-            res.status(500).json(response);
-            return;
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'Task statistics retrieved',
-            data: stats,
-        });
-    } catch (error) {
-        next(error);
+    if (!stats) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to get statistics",
+        error: "Could not retrieve task statistics",
+      };
+      res.status(500).json(response);
+      return;
     }
+
+    res.status(200).json({
+      success: true,
+      message: "Task statistics retrieved",
+      data: stats,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 ```
 
 ### 💡 Async/Await with Express:
+
 - Controllers are now `async` functions
 - Use `await` for database calls
 - Always wrap in `try-catch`
@@ -1098,248 +1106,256 @@ export const getTaskStats = async (
 // VALIDATION MIDDLEWARE
 // ============================================
 
-import { Request, Response, NextFunction } from 'express';
-import { ApiResponse, Priority, TaskStatus } from '../interfaces/task.interface';
+import { Request, Response, NextFunction } from "express";
+import {
+  ApiResponse,
+  Priority,
+  TaskStatus,
+} from "../interfaces/task.interface";
 
 // Valid values for validation
-const VALID_PRIORITIES: Priority[] = ['low', 'medium', 'high'];
-const VALID_STATUSES: TaskStatus[] = ['pending', 'in-progress', 'completed'];
+const VALID_PRIORITIES: Priority[] = ["low", "medium", "high"];
+const VALID_STATUSES: TaskStatus[] = ["pending", "in-progress", "completed"];
 
 /**
  * Validate task creation request
  */
 export const validateCreateTask = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const { title, priority, due_date } = req.body;
+  const { title, priority, due_date } = req.body;
 
-    // Check if title exists and is not empty
-    if (!title || typeof title !== 'string' || title.trim() === '') {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Title is required and must be a non-empty string',
-        };
-        res.status(400).json(response);
-        return;
+  // Check if title exists and is not empty
+  if (!title || typeof title !== "string" || title.trim() === "") {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "Title is required and must be a non-empty string",
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Check title length
+  if (title.length > 255) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "Title must be 255 characters or less",
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Validate priority if provided
+  if (priority && !VALID_PRIORITIES.includes(priority)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: `Priority must be one of: ${VALID_PRIORITIES.join(", ")}`,
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Validate due_date format if provided
+  if (due_date) {
+    const date = new Date(due_date);
+    if (isNaN(date.getTime())) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Validation failed",
+        error: "Invalid date format for due_date. Use ISO format: YYYY-MM-DD",
+      };
+      res.status(400).json(response);
+      return;
     }
+  }
 
-    // Check title length
-    if (title.length > 255) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Title must be 255 characters or less',
-        };
-        res.status(400).json(response);
-        return;
-    }
-
-    // Validate priority if provided
-    if (priority && !VALID_PRIORITIES.includes(priority)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: `Priority must be one of: ${VALID_PRIORITIES.join(', ')}`,
-        };
-        res.status(400).json(response);
-        return;
-    }
-
-    // Validate due_date format if provided
-    if (due_date) {
-        const date = new Date(due_date);
-        if (isNaN(date.getTime())) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Validation failed',
-                error: 'Invalid date format for due_date. Use ISO format: YYYY-MM-DD',
-            };
-            res.status(400).json(response);
-            return;
-        }
-    }
-
-    // Validation passed
-    next();
+  // Validation passed
+  next();
 };
 
 /**
  * Validate task update request
  */
 export const validateUpdateTask = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const { title, status, priority, due_date } = req.body;
+  const { title, status, priority, due_date } = req.body;
 
-    // Check if at least one field is provided
-    if (Object.keys(req.body).length === 0) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'At least one field is required for update',
-        };
-        res.status(400).json(response);
-        return;
+  // Check if at least one field is provided
+  if (Object.keys(req.body).length === 0) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "At least one field is required for update",
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Validate title if provided
+  if (title !== undefined) {
+    if (typeof title !== "string" || title.trim() === "") {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Validation failed",
+        error: "Title must be a non-empty string",
+      };
+      res.status(400).json(response);
+      return;
     }
-
-    // Validate title if provided
-    if (title !== undefined) {
-        if (typeof title !== 'string' || title.trim() === '') {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Validation failed',
-                error: 'Title must be a non-empty string',
-            };
-            res.status(400).json(response);
-            return;
-        }
-        if (title.length > 255) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Validation failed',
-                error: 'Title must be 255 characters or less',
-            };
-            res.status(400).json(response);
-            return;
-        }
+    if (title.length > 255) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Validation failed",
+        error: "Title must be 255 characters or less",
+      };
+      res.status(400).json(response);
+      return;
     }
+  }
 
-    // Validate status if provided
-    if (status && !VALID_STATUSES.includes(status)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: `Status must be one of: ${VALID_STATUSES.join(', ')}`,
-        };
-        res.status(400).json(response);
-        return;
+  // Validate status if provided
+  if (status && !VALID_STATUSES.includes(status)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: `Status must be one of: ${VALID_STATUSES.join(", ")}`,
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Validate priority if provided
+  if (priority && !VALID_PRIORITIES.includes(priority)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: `Priority must be one of: ${VALID_PRIORITIES.join(", ")}`,
+    };
+    res.status(400).json(response);
+    return;
+  }
+
+  // Validate due_date if provided
+  if (due_date) {
+    const date = new Date(due_date);
+    if (isNaN(date.getTime())) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Validation failed",
+        error: "Invalid date format for due_date",
+      };
+      res.status(400).json(response);
+      return;
     }
+  }
 
-    // Validate priority if provided
-    if (priority && !VALID_PRIORITIES.includes(priority)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: `Priority must be one of: ${VALID_PRIORITIES.join(', ')}`,
-        };
-        res.status(400).json(response);
-        return;
-    }
-
-    // Validate due_date if provided
-    if (due_date) {
-        const date = new Date(due_date);
-        if (isNaN(date.getTime())) {
-            const response: ApiResponse<null> = {
-                success: false,
-                message: 'Validation failed',
-                error: 'Invalid date format for due_date',
-            };
-            res.status(400).json(response);
-            return;
-        }
-    }
-
-    next();
+  next();
 };
 
 /**
  * Validate UUID format for task ID
  */
 export const validateTaskId = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    // UUID v4 regex pattern
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  // UUID v4 regex pattern
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-    if (!uuidRegex.test(id)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Invalid task ID format. Must be a valid UUID',
-        };
-        res.status(400).json(response);
-        return;
-    }
+  if (!uuidRegex.test(id)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "Invalid task ID format. Must be a valid UUID",
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    next();
+  next();
 };
 
 /**
  * Validate query parameters
  */
 export const validateQueryParams = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const { status, priority, limit, offset, order } = req.query;
+  const { status, priority, limit, offset, order } = req.query;
 
-    // Validate status if provided
-    if (status && !VALID_STATUSES.includes(status as TaskStatus)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`,
-        };
-        res.status(400).json(response);
-        return;
-    }
+  // Validate status if provided
+  if (status && !VALID_STATUSES.includes(status as TaskStatus)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    // Validate priority if provided
-    if (priority && !VALID_PRIORITIES.includes(priority as Priority)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: `Invalid priority. Must be one of: ${VALID_PRIORITIES.join(', ')}`,
-        };
-        res.status(400).json(response);
-        return;
-    }
+  // Validate priority if provided
+  if (priority && !VALID_PRIORITIES.includes(priority as Priority)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: `Invalid priority. Must be one of: ${VALID_PRIORITIES.join(", ")}`,
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    // Validate limit
-    if (limit && (isNaN(Number(limit)) || Number(limit) < 1 || Number(limit) > 100)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Limit must be a number between 1 and 100',
-        };
-        res.status(400).json(response);
-        return;
-    }
+  // Validate limit
+  if (
+    limit &&
+    (isNaN(Number(limit)) || Number(limit) < 1 || Number(limit) > 100)
+  ) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "Limit must be a number between 1 and 100",
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    // Validate offset
-    if (offset && (isNaN(Number(offset)) || Number(offset) < 0)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Offset must be a non-negative number',
-        };
-        res.status(400).json(response);
-        return;
-    }
+  // Validate offset
+  if (offset && (isNaN(Number(offset)) || Number(offset) < 0)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: "Offset must be a non-negative number",
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    // Validate order
-    if (order && !['asc', 'desc'].includes(order as string)) {
-        const response: ApiResponse<null> = {
-            success: false,
-            message: 'Validation failed',
-            error: 'Order must be either "asc" or "desc"',
-        };
-        res.status(400).json(response);
-        return;
-    }
+  // Validate order
+  if (order && !["asc", "desc"].includes(order as string)) {
+    const response: ApiResponse<null> = {
+      success: false,
+      message: "Validation failed",
+      error: 'Order must be either "asc" or "desc"',
+    };
+    res.status(400).json(response);
+    return;
+  }
 
-    next();
+  next();
 };
 ```
 
@@ -1354,22 +1370,22 @@ export const validateQueryParams = (
 // ERROR HANDLER MIDDLEWARE
 // ============================================
 
-import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '../interfaces/task.interface';
+import { Request, Response, NextFunction } from "express";
+import { ApiResponse } from "../interfaces/task.interface";
 
 /**
  * Custom error class with status code
  */
 export class AppError extends Error {
-    statusCode: number;
-    isOperational: boolean;
+  statusCode: number;
+  isOperational: boolean;
 
-    constructor(message: string, statusCode: number) {
-        super(message);
-        this.statusCode = statusCode;
-        this.isOperational = true;
-        Error.captureStackTrace(this, this.constructor);
-    }
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = true;
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
 /**
@@ -1377,59 +1393,60 @@ export class AppError extends Error {
  * Eliminates try-catch boilerplate in controllers
  */
 export const asyncHandler = (
-    fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
 ) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        Promise.resolve(fn(req, res, next)).catch(next);
-    };
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 };
 
 /**
  * Global error handling middleware
  */
 export const errorHandler = (
-    err: Error | AppError,
-    req: Request,
-    res: Response,
-    next: NextFunction
+  err: Error | AppError,
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    // Log error for debugging
-    console.error('❌ Error:', {
-        message: err.message,
-        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
-        url: req.originalUrl,
-        method: req.method,
-        timestamp: new Date().toISOString(),
-    });
+  // Log error for debugging
+  console.error("❌ Error:", {
+    message: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    url: req.originalUrl,
+    method: req.method,
+    timestamp: new Date().toISOString(),
+  });
 
-    // Determine status code
-    const statusCode = err instanceof AppError ? err.statusCode : 500;
-    const message = err.message || 'Internal Server Error';
+  // Determine status code
+  const statusCode = err instanceof AppError ? err.statusCode : 500;
+  const message = err.message || "Internal Server Error";
 
-    const response: ApiResponse<null> = {
-        success: false,
-        message: statusCode === 500 ? 'Internal Server Error' : 'An error occurred',
-        error: process.env.NODE_ENV === 'development' ? message : 'Something went wrong',
-    };
+  const response: ApiResponse<null> = {
+    success: false,
+    message: statusCode === 500 ? "Internal Server Error" : "An error occurred",
+    error:
+      process.env.NODE_ENV === "development" ? message : "Something went wrong",
+  };
 
-    res.status(statusCode).json(response);
+  res.status(statusCode).json(response);
 };
 
 /**
  * 404 Not Found handler
  */
 export const notFoundHandler = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const response: ApiResponse<null> = {
-        success: false,
-        message: 'Route not found',
-        error: `Cannot ${req.method} ${req.originalUrl}`,
-    };
+  const response: ApiResponse<null> = {
+    success: false,
+    message: "Route not found",
+    error: `Cannot ${req.method} ${req.originalUrl}`,
+  };
 
-    res.status(404).json(response);
+  res.status(404).json(response);
 };
 ```
 
@@ -1444,14 +1461,14 @@ export const notFoundHandler = (
 // TASK ROUTES - API Endpoint Definitions
 // ============================================
 
-import { Router } from 'express';
-import * as TaskController from '../controllers/taskController';
+import { Router } from "express";
+import * as TaskController from "../controllers/taskController";
 import {
-    validateCreateTask,
-    validateUpdateTask,
-    validateTaskId,
-    validateQueryParams,
-} from '../middleware/validateTask';
+  validateCreateTask,
+  validateUpdateTask,
+  validateTaskId,
+  validateQueryParams,
+} from "../middleware/validateTask";
 
 // Create router instance
 const router = Router();
@@ -1465,46 +1482,52 @@ const router = Router();
  * Get task statistics
  * NOTE: This must come before /:id route!
  */
-router.get('/stats', TaskController.getTaskStats);
+router.get("/stats", TaskController.getTaskStats);
 
 /**
  * GET /api/tasks
  * Get all tasks (with optional filtering)
  * Query: ?status=completed&priority=high&search=keyword&sort_by=created_at&order=desc&limit=10&offset=0
  */
-router.get('/', validateQueryParams, TaskController.getAllTasks);
+router.get("/", validateQueryParams, TaskController.getAllTasks);
 
 /**
  * GET /api/tasks/:id
  * Get single task by ID
  */
-router.get('/:id', validateTaskId, TaskController.getTaskById);
+router.get("/:id", validateTaskId, TaskController.getTaskById);
 
 /**
  * POST /api/tasks
  * Create new task
  * Body: { title, description?, priority?, due_date? }
  */
-router.post('/', validateCreateTask, TaskController.createTask);
+router.post("/", validateCreateTask, TaskController.createTask);
 
 /**
  * PUT /api/tasks/:id
  * Update existing task
  * Body: { title?, description?, status?, priority?, due_date? }
  */
-router.put('/:id', validateTaskId, validateUpdateTask, TaskController.updateTask);
+router.put(
+  "/:id",
+  validateTaskId,
+  validateUpdateTask,
+  TaskController.updateTask
+);
 
 /**
  * DELETE /api/tasks/:id
  * Delete task
  */
-router.delete('/:id', validateTaskId, TaskController.deleteTask);
+router.delete("/:id", validateTaskId, TaskController.deleteTask);
 
 // Export router
 export default router;
 ```
 
 ### ⚠️ Important Route Order:
+
 - `/stats` MUST come before `/:id`
 - Otherwise Express thinks "stats" is an ID!
 
@@ -1519,10 +1542,10 @@ export default router;
 // EXPRESS APPLICATION - Main Entry Point
 // ============================================
 
-import express, { Application, Request, Response } from 'express';
-import dotenv from 'dotenv';
-import taskRoutes from './routes/taskRoutes';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import express, { Application, Request, Response } from "express";
+import dotenv from "dotenv";
+import taskRoutes from "./routes/taskRoutes";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 // Load environment variables FIRST
 dotenv.config();
@@ -1531,38 +1554,41 @@ dotenv.config();
 const app: Application = express();
 
 // Port configuration
-const PORT: number = parseInt(process.env.PORT || '3000', 10);
-const NODE_ENV: string = process.env.NODE_ENV || 'development';
+const PORT: number = parseInt(process.env.PORT || "3000", 10);
+const NODE_ENV: string = process.env.NODE_ENV || "development";
 
 // ============================================
 // MIDDLEWARE SETUP
 // ============================================
 
 // Parse JSON request bodies
-app.use(express.json({ limit: '10kb' })); // Limit body size for security
+app.use(express.json({ limit: "10kb" })); // Limit body size for security
 
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req: Request, res: Response, next) => {
-    const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${req.method} ${req.url}`);
-    next();
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+  next();
 });
 
 // CORS headers
 app.use((req: Request, res: Response, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-        return;
-    }
-    
-    next();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+    return;
+  }
+
+  next();
 });
 
 // ============================================
@@ -1570,45 +1596,49 @@ app.use((req: Request, res: Response, next) => {
 // ============================================
 
 // Health check
-app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({
-        success: true,
-        message: '🚀 Task Manager API is running!',
-        version: '1.0.0',
-        environment: NODE_ENV,
-        documentation: '/api',
-    });
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 Task Manager API is running!",
+    version: "1.0.0",
+    environment: NODE_ENV,
+    documentation: "/api",
+  });
 });
 
 // API documentation
-app.get('/api', (req: Request, res: Response) => {
-    res.status(200).json({
-        success: true,
-        message: 'Task Manager API Documentation',
-        version: '1.0.0',
-        database: 'Supabase (PostgreSQL)',
-        endpoints: [
-            { method: 'GET', path: '/api/tasks', description: 'Get all tasks' },
-            { method: 'GET', path: '/api/tasks/stats', description: 'Get task statistics' },
-            { method: 'GET', path: '/api/tasks/:id', description: 'Get task by ID' },
-            { method: 'POST', path: '/api/tasks', description: 'Create new task' },
-            { method: 'PUT', path: '/api/tasks/:id', description: 'Update task' },
-            { method: 'DELETE', path: '/api/tasks/:id', description: 'Delete task' },
-        ],
-        queryParams: {
-            status: 'Filter by status (pending, in-progress, completed)',
-            priority: 'Filter by priority (low, medium, high)',
-            search: 'Search in title and description',
-            sort_by: 'Sort by field (created_at, updated_at, due_date, priority)',
-            order: 'Sort order (asc, desc)',
-            limit: 'Number of results (1-100)',
-            offset: 'Offset for pagination',
-        },
-    });
+app.get("/api", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "Task Manager API Documentation",
+    version: "1.0.0",
+    database: "Supabase (PostgreSQL)",
+    endpoints: [
+      { method: "GET", path: "/api/tasks", description: "Get all tasks" },
+      {
+        method: "GET",
+        path: "/api/tasks/stats",
+        description: "Get task statistics",
+      },
+      { method: "GET", path: "/api/tasks/:id", description: "Get task by ID" },
+      { method: "POST", path: "/api/tasks", description: "Create new task" },
+      { method: "PUT", path: "/api/tasks/:id", description: "Update task" },
+      { method: "DELETE", path: "/api/tasks/:id", description: "Delete task" },
+    ],
+    queryParams: {
+      status: "Filter by status (pending, in-progress, completed)",
+      priority: "Filter by priority (low, medium, high)",
+      search: "Search in title and description",
+      sort_by: "Sort by field (created_at, updated_at, due_date, priority)",
+      order: "Sort order (asc, desc)",
+      limit: "Number of results (1-100)",
+      offset: "Offset for pagination",
+    },
+  });
 });
 
 // Mount task routes
-app.use('/api/tasks', taskRoutes);
+app.use("/api/tasks", taskRoutes);
 
 // ============================================
 // ERROR HANDLING
@@ -1622,16 +1652,16 @@ app.use(errorHandler);
 // ============================================
 
 app.listen(PORT, () => {
-    console.log('');
-    console.log('╔════════════════════════════════════════════╗');
-    console.log('║  🚀 Task Manager API Server Started!       ║');
-    console.log('╠════════════════════════════════════════════╣');
-    console.log(`║  📍 URL: http://localhost:${PORT}             ║`);
-    console.log(`║  📚 Docs: http://localhost:${PORT}/api          ║`);
-    console.log(`║  🌍 Environment: ${NODE_ENV.padEnd(20)}  ║`);
-    console.log('║  💾 Database: Supabase PostgreSQL          ║');
-    console.log('╚════════════════════════════════════════════╝');
-    console.log('');
+  console.log("");
+  console.log("╔════════════════════════════════════════════╗");
+  console.log("║  🚀 Task Manager API Server Started!       ║");
+  console.log("╠════════════════════════════════════════════╣");
+  console.log(`║  📍 URL: http://localhost:${PORT}             ║`);
+  console.log(`║  📚 Docs: http://localhost:${PORT}/api          ║`);
+  console.log(`║  🌍 Environment: ${NODE_ENV.padEnd(20)}  ║`);
+  console.log("║  💾 Database: Supabase PostgreSQL          ║");
+  console.log("╚════════════════════════════════════════════╝");
+  console.log("");
 });
 
 export default app;
@@ -1650,6 +1680,7 @@ npm run dev
 ```
 
 Expected output:
+
 ```
 ✅ Supabase client initialized
 📍 Connected to: https://xxxxx.supabase.co
@@ -1672,49 +1703,55 @@ Use **Thunder Client** (VS Code extension) or **Postman**:
 
 ---
 
-#### Test 1: Health Check
+#### Test 1: Health Check - Works
+
 ```
 GET http://localhost:3000/
 ```
 
 ---
 
-#### Test 2: API Documentation
+#### Test 2: API Documentation - Works
+
 ```
 GET http://localhost:3000/api
 ```
 
 ---
 
-#### Test 3: Get All Tasks
+#### Test 3: Get All Tasks - Works
+
 ```
 GET http://localhost:3000/api/tasks
 ```
 
 ---
 
-#### Test 4: Get Task Statistics
+#### Test 4: Get Task Statistics - Works
+
 ```
 GET http://localhost:3000/api/tasks/stats
 ```
 
 Expected Response:
+
 ```json
 {
-    "success": true,
-    "message": "Task statistics retrieved",
-    "data": {
-        "total": 5,
-        "pending": 3,
-        "inProgress": 1,
-        "completed": 1
-    }
+  "success": true,
+  "message": "Task statistics retrieved",
+  "data": {
+    "total": 5,
+    "pending": 3,
+    "inProgress": 1,
+    "completed": 1
+  }
 }
 ```
 
 ---
 
-#### Test 5: Create New Task
+#### Test 5: Create New Task - Works
+
 ```
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
@@ -1729,70 +1766,80 @@ Content-Type: application/json
 
 ---
 
-#### Test 6: Get Task by ID
+#### Test 6: Get Task by ID - Works
+
 ```
 GET http://localhost:3000/api/tasks/{uuid}
 ```
+
 (Replace `{uuid}` with actual ID from create response)
 
 ---
 
-#### Test 7: Update Task
+#### Test 7: Update Task - Works
+
 ```
 PUT http://localhost:3000/api/tasks/{uuid}
 Content-Type: application/json
 
 {
     "status": "completed",
-    "priority": "low"
+    "priority": "high"
 }
 ```
 
 ---
 
-#### Test 8: Delete Task
+#### Test 8: Delete Task - Works
+
 ```
 DELETE http://localhost:3000/api/tasks/{uuid}
 ```
 
 ---
 
-#### Test 9: Filter by Status
+#### Test 9: Filter by Status - Works
+
 ```
 GET http://localhost:3000/api/tasks?status=pending
 ```
 
 ---
 
-#### Test 10: Filter by Priority
+#### Test 10: Filter by Priority - Works
+
 ```
 GET http://localhost:3000/api/tasks?priority=high
 ```
 
 ---
 
-#### Test 11: Search Tasks
+#### Test 11: Search Tasks - Works
+
 ```
 GET http://localhost:3000/api/tasks?search=typescript
 ```
 
 ---
 
-#### Test 12: Sort and Paginate
+#### Test 12: Sort and Paginate - Works
+
 ```
 GET http://localhost:3000/api/tasks?sort_by=created_at&order=desc&limit=5&offset=0
 ```
 
 ---
 
-#### Test 13: Combined Filters
+#### Test 13: Combined Filters - Works
+
 ```
 GET http://localhost:3000/api/tasks?status=pending&priority=medium&sort_by=due_date&order=asc
 ```
 
 ---
 
-#### Test 14: Validation Error (No Title)
+#### Test 14: Validation Error (No Title) - Correctly Handles Error
+
 ```
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
@@ -1806,7 +1853,8 @@ Expected: 400 Bad Request
 
 ---
 
-#### Test 15: Invalid UUID
+#### Test 15: Invalid UUID - Correctly Handles Error
+
 ```
 GET http://localhost:3000/api/tasks/invalid-uuid
 ```
@@ -1817,18 +1865,18 @@ Expected: 400 Bad Request
 
 # 📊 Complete API Reference
 
-| Method | Endpoint | Query Params | Body | Description |
-|--------|----------|--------------|------|-------------|
-| GET | `/` | - | - | Health check |
-| GET | `/api` | - | - | API documentation |
-| GET | `/api/tasks` | status, priority, search, sort_by, order, limit, offset | - | Get all tasks |
-| GET | `/api/tasks/stats` | - | - | Get statistics |
-| GET | `/api/tasks/:id` | - | - | Get by ID |
-| POST | `/api/tasks` | - | title*, description?, priority?, due_date? | Create task |
-| PUT | `/api/tasks/:id` | - | title?, description?, status?, priority?, due_date? | Update task |
-| DELETE | `/api/tasks/:id` | - | - | Delete task |
+| Method | Endpoint           | Query Params                                            | Body                                                | Description       |
+| ------ | ------------------ | ------------------------------------------------------- | --------------------------------------------------- | ----------------- |
+| GET    | `/`                | -                                                       | -                                                   | Health check      |
+| GET    | `/api`             | -                                                       | -                                                   | API documentation |
+| GET    | `/api/tasks`       | status, priority, search, sort_by, order, limit, offset | -                                                   | Get all tasks     |
+| GET    | `/api/tasks/stats` | -                                                       | -                                                   | Get statistics    |
+| GET    | `/api/tasks/:id`   | -                                                       | -                                                   | Get by ID         |
+| POST   | `/api/tasks`       | -                                                       | title\*, description?, priority?, due_date?         | Create task       |
+| PUT    | `/api/tasks/:id`   | -                                                       | title?, description?, status?, priority?, due_date? | Update task       |
+| DELETE | `/api/tasks/:id`   | -                                                       | -                                                   | Delete task       |
 
-*Required field
+\*Required field
 
 ---
 
@@ -1863,6 +1911,7 @@ Expected: 400 Bad Request
 You've built a **production-ready REST API** with a **real database**!
 
 This project demonstrates skills used in professional development:
+
 - Clean architecture
 - Type safety
 - Database integration
@@ -1872,4 +1921,4 @@ This project demonstrates skills used in professional development:
 
 ---
 
-*Built with TypeScript, Express.js, and Supabase*
+_Built with TypeScript, Express.js, and Supabase_

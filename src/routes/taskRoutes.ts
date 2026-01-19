@@ -21,17 +21,22 @@ const router = Router();
 // GET /api/tasks/stats
 // Get task statistics
 // Note: this must come before /:id route
-
 router.get("/stats", TaskController.getTaskStats);
 
 // GET /api/tasks
-// Get all tasks(with optional filtering)
-// Query: ?status=completed&priority=high&search=heyword&sort_by=created_at&order=desc&limit=10&offset=0
-router.get("/:id", validateCreateTask, TaskController.createTask);
+// Get all tasks (with optional filtering)
+router.get("/", validateQueryParams, TaskController.getAllTasks);
+
+// GET /api/tasks/:id
+// Get task by ID
+router.get("/:id", validateTaskId, TaskController.getTaskById);
+
+// POST /api/tasks
+// Create new task
+router.post("/", validateCreateTask, TaskController.createTask);
 
 // PUT /api/tasks/:id
-// update exsiting task
-// Body: { title?, description?, status?, priority?, due_date? }
+// Update existing task
 router.put(
   "/:id",
   validateTaskId,
