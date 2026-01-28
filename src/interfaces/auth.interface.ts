@@ -46,7 +46,7 @@ export interface ResetPasswordDTO {
 }
 
 // Auth API response wrapper
-export interface AUthResponse<T> {
+export interface AuthResponse<T> {
   success: boolean;
   message: string;
   data?: T;
