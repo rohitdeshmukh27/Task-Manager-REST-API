@@ -22,7 +22,7 @@ export class AppError extends Error {
 // eliminates try catch boilerplate in controllers
 
 export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>,
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -35,7 +35,7 @@ export const errorHandler = (
   err: Error | AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   //log error for debugging
   console.log("Error: ", {
@@ -61,10 +61,10 @@ export const errorHandler = (
 
 // 404 Not Found handler
 
-export const notFoundHanler = (
+export const notFoundHandler = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   const response: ApiResponse<null> = {
     success: false,

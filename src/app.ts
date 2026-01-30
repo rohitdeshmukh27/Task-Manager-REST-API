@@ -5,7 +5,8 @@
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
 import taskRoutes from "./routes/taskRoutes";
-import { errorHandler, notFoundHanler } from "./middleware/errorHandler";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import authRoutes from "./routes/authRoutes";
 
 // load en var first
 dotenv.config();
@@ -36,7 +37,10 @@ app.use((req: Request, res: Response, next) => {
 // CORS headers
 app.use((req: Request, res: Response, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Method", "GET,POST,PUT,DELETE, OPTIONS");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS",
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
@@ -80,6 +84,44 @@ app.get("/api", (req: Request, res: Response) => {
       { method: "PUT", path: "/api/tasks/:id", description: "Update task" },
       { method: "DELETE", path: "/api/tasks/:id", description: "Delete task" },
     ],
+    authEndpoints: [
+      {
+        method: "POST",
+        path: "/api/auth/signup",
+        description: "Register new user",
+      },
+      { method: "POST", path: "/api/auth/login", description: "Login user" },
+      {
+        method: "POST",
+        path: "/api/auth/logout",
+        description: "Logout user(auth required)",
+      },
+      {
+        method: "POST",
+        path: "/api/auth/forgot-password",
+        description: "Request password reset",
+      },
+      {
+        method: "POST",
+        path: "/api/auth/reset-password",
+        description: "Set new password",
+      },
+      {
+        method: "GET",
+        path: "/api/auth/me",
+        description: "Get current user (Auth required)",
+      },
+      {
+        method: "POST",
+        path: "/api/auth/refresh",
+        description: "Refresh access token",
+      },
+      {
+        method: "POST",
+        path: "/api/auth/resend-verification",
+        description: "Resend verification email",
+      },
+    ],
     queryParams: {
       status: "Filter by status (pending, in-process, completed)",
       priority: "Filter by priority (low, medium, high)",
@@ -92,6 +134,9 @@ app.get("/api", (req: Request, res: Response) => {
   });
 });
 
+// Mount auth routes
+app.use("/api/auth", authRoutes);
+
 // Mount task routes
 app.use("/api/tasks", taskRoutes);
 
@@ -99,7 +144,7 @@ app.use("/api/tasks", taskRoutes);
 // ERROR HANDLING
 // ============================================
 
-app.use(notFoundHanler);
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 // ============================================

@@ -10,6 +10,10 @@ import {
   validateTaskId,
   validateQueryParams,
 } from "../middleware/validateTask";
+import {
+  authenticate,
+  requireVerifiedEmail,
+} from "../middleware/authMiddleware";
 
 // create router instance
 const router = Router();
@@ -32,21 +36,22 @@ router.get("/", validateQueryParams, TaskController.getAllTasks);
 router.get("/:id", validateTaskId, TaskController.getTaskById);
 
 // POST /api/tasks
-// Create new task
-router.post("/", validateCreateTask, TaskController.createTask);
+// Create new task (Protected)
+router.post("/", authenticate, validateCreateTask, TaskController.createTask);
 
 // PUT /api/tasks/:id
-// Update existing task
+// Update existing task (Protected)
 router.put(
   "/:id",
+  authenticate,
   validateTaskId,
   validateUpdateTask,
-  TaskController.updateTask
+  TaskController.updateTask,
 );
 
 // DELETE /api/tasks/:id
-// Delete task
-router.delete("/:id", validateTaskId, TaskController.deleteTask);
+// Delete task (Protected)
+router.delete("/:id", authenticate, validateTaskId, TaskController.deleteTask);
 
 // Export router
 export default router;
