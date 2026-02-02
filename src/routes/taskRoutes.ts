@@ -1,5 +1,5 @@
 // =============================
-// TASK ROUTES - API end points defination
+// TASK ROUTES - API Endpoints
 // =============================
 
 import { Router } from "express";
@@ -10,21 +10,18 @@ import {
   validateTaskId,
   validateQueryParams,
 } from "../middleware/validateTask";
-import {
-  authenticate,
-  requireVerifiedEmail,
-} from "../middleware/authMiddleware";
+import { authenticate } from "../middleware/authMiddleware";
+import { createTaskLimiter } from "../config/rateLimiter";
 
-// create router instance
+// Create router instance
 const router = Router();
 
 // ====================================
-// Route definations
+// PUBLIC ROUTES (Read operations)
 // ====================================
 
 // GET /api/tasks/stats
 // Get task statistics
-// Note: this must come before /:id route
 router.get("/stats", TaskController.getTaskStats);
 
 // GET /api/tasks
@@ -35,9 +32,19 @@ router.get("/", validateQueryParams, TaskController.getAllTasks);
 // Get task by ID
 router.get("/:id", validateTaskId, TaskController.getTaskById);
 
+// ====================================
+// PROTECTED ROUTES (Write operations)
+// ====================================
+
 // POST /api/tasks
-// Create new task (Protected)
-router.post("/", authenticate, validateCreateTask, TaskController.createTask);
+// Create new task (Protected + Rate Limited)
+router.post(
+  "/",
+  authenticate,
+  createTaskLimiter,
+  validateCreateTask,
+  TaskController.createTask,
+);
 
 // PUT /api/tasks/:id
 // Update existing task (Protected)
@@ -53,5 +60,4 @@ router.put(
 // Delete task (Protected)
 router.delete("/:id", authenticate, validateTaskId, TaskController.deleteTask);
 
-// Export router
 export default router;

@@ -4,37 +4,47 @@
 
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
+
+// Route imports
 import taskRoutes from "./routes/taskRoutes";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 import authRoutes from "./routes/authRoutes";
 
-// load en var first
+// Middleware imports
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import { applySecurityMiddleware } from "./middleware/security";
+import { generalLimiter } from "./config/rateLimiter";
+
+// Load environment variables FIRST
 dotenv.config();
 
-// create express application
+// Create Express application
 const app: Application = express();
 
 // Port configuration
 const PORT: number = parseInt(process.env.PORT || "3000", 10);
 const NODE_ENV: string = process.env.NODE_ENV || "development";
 
+// ============================================
+// SECURITY MIDDLEWARE (Apply FIRST)
+// ============================================
+
+// Apply Helmet, Compression, and Morgan
+applySecurityMiddleware(app);
+
+// Apply general rate limiter to all requests
+app.use(generalLimiter);
+
 // ===========================
-// MIDDLEWARE SETUP
+// BODY PARSING MIDDLEWARE
 // ===========================
 
-app.use(express.json({ limit: "10kb" })); // limit body size for security
-
-// parse URL - encoded middleware
+app.use(express.json({ limit: "10kb" })); // Limit body size for security
 app.use(express.urlencoded({ extended: true }));
 
-// request loggin middleware
-app.use((req: Request, res: Response, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.url}`);
-  next();
-});
+// ===========================
+// CORS HEADERS
+// ===========================
 
-// CORS headers
 app.use((req: Request, res: Response, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -54,7 +64,7 @@ app.use((req: Request, res: Response, next) => {
 // ROUTES
 // ==================
 
-// Health Check
+// Health Check (no rate limit applied via skip)
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
@@ -72,6 +82,11 @@ app.get("/api", (req: Request, res: Response) => {
     message: "Task Manager API Documentation",
     version: "1.0.0",
     database: "Supabase (PostgreSQL)",
+    security: {
+      helmet: "Enabled (15+ security headers)",
+      rateLimit: "100 requests per 15 minutes",
+      compression: "Enabled (gzip)",
+    },
     endpoints: [
       { method: "GET", path: "/api/tasks", description: "Get all tasks" },
       {
@@ -80,31 +95,50 @@ app.get("/api", (req: Request, res: Response) => {
         description: "Get task statistics",
       },
       { method: "GET", path: "/api/tasks/:id", description: "Get task by ID" },
-      { method: "POST", path: "/api/tasks", description: "Create new task" },
-      { method: "PUT", path: "/api/tasks/:id", description: "Update task" },
-      { method: "DELETE", path: "/api/tasks/:id", description: "Delete task" },
+      {
+        method: "POST",
+        path: "/api/tasks",
+        description: "Create new task (Auth required)",
+      },
+      {
+        method: "PUT",
+        path: "/api/tasks/:id",
+        description: "Update task (Auth required)",
+      },
+      {
+        method: "DELETE",
+        path: "/api/tasks/:id",
+        description: "Delete task (Auth required)",
+      },
     ],
     authEndpoints: [
       {
         method: "POST",
         path: "/api/auth/signup",
         description: "Register new user",
+        rateLimit: "3/hour",
       },
-      { method: "POST", path: "/api/auth/login", description: "Login user" },
+      {
+        method: "POST",
+        path: "/api/auth/login",
+        description: "Login user",
+        rateLimit: "5/15min",
+      },
       {
         method: "POST",
         path: "/api/auth/logout",
-        description: "Logout user(auth required)",
+        description: "Logout user (Auth required)",
       },
       {
         method: "POST",
         path: "/api/auth/forgot-password",
         description: "Request password reset",
+        rateLimit: "3/hour",
       },
       {
         method: "POST",
         path: "/api/auth/reset-password",
-        description: "Set new password",
+        description: "Set new password (Auth required)",
       },
       {
         method: "GET",
@@ -122,15 +156,6 @@ app.get("/api", (req: Request, res: Response) => {
         description: "Resend verification email",
       },
     ],
-    queryParams: {
-      status: "Filter by status (pending, in-process, completed)",
-      priority: "Filter by priority (low, medium, high)",
-      search: "Search in title and description",
-      sort_by: "Sort by field (created_at, updated_at, due_date, priority)",
-      order: "Sort order (asc, desc)",
-      limit: "Number of results (1-100)",
-      offset: "Offset for pagination",
-    },
   });
 });
 
@@ -160,6 +185,7 @@ app.listen(PORT, () => {
   console.log(`║  📚 Docs: http://localhost:${PORT}/api          ║`);
   console.log(`║  🌍 Environment: ${NODE_ENV.padEnd(20)}  ║`);
   console.log("║  💾 Database: Supabase PostgreSQL          ║");
+  console.log("║  🛡️  Security: Helmet + Rate Limiting       ║");
   console.log("╚════════════════════════════════════════════╝");
   console.log("");
 });
