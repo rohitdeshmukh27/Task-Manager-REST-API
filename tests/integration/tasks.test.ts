@@ -7,10 +7,7 @@ import { Priority } from "./../../src/interfaces/task.interface";
 import request from "supertest";
 import express from "express";
 import taskRoutes from "../../src/routes/taskRoutes";
-import {
-  authenticate,
-  requireVerifiedEmail,
-} from "../../src/middleware/authMiddleware";
+import { authenticate, requireVerifiedEmail } from "../../src/middleware/authMiddleware";
 
 // Create test app
 const app = express();
@@ -79,15 +76,13 @@ describe("Task API Integration Tests", () => {
 
       // Assert
       expect(TaskService.getAllTasks).toHaveBeenCalledWith(
-        expect.objectContaining({ status: "pending" }),
+        expect.objectContaining({ status: "pending" })
       );
     });
 
     it("should return 400 for invalid status", async () => {
       // Act
-      const response = await request(app)
-        .get("/api/tasks?status=invalid")
-        .expect(400);
+      const response = await request(app).get("/api/tasks?status=invalid").expect(400);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -128,9 +123,7 @@ describe("Task API Integration Tests", () => {
       });
 
       // Act
-      const response = await request(app)
-        .get(`/api/tasks/${mockTask.id}`)
-        .expect(200);
+      const response = await request(app).get(`/api/tasks/${mockTask.id}`).expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -139,9 +132,7 @@ describe("Task API Integration Tests", () => {
 
     it("should return 400 for invalid UUID format", async () => {
       // Act
-      const response = await request(app)
-        .get("/api/tasks/invalid-uuid")
-        .expect(400);
+      const response = await request(app).get("/api/tasks/invalid-uuid").expect(400);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -250,10 +241,7 @@ describe("Task API Integration Tests", () => {
       });
 
       // Act
-      const response = await request(app)
-        .put(`/api/tasks/${validUUID}`)
-        .send(updates)
-        .expect(200);
+      const response = await request(app).put(`/api/tasks/${validUUID}`).send(updates).expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -273,10 +261,7 @@ describe("Task API Integration Tests", () => {
 
     it("should return 400 for empty update body", async () => {
       // Act
-      const response = await request(app)
-        .put(`/api/tasks/${validUUID}`)
-        .send({})
-        .expect(400);
+      const response = await request(app).put(`/api/tasks/${validUUID}`).send({}).expect(400);
 
       // Assert
       expect(response.body.success).toBe(false);
@@ -302,9 +287,7 @@ describe("Task API Integration Tests", () => {
       });
 
       // Act
-      const response = await request(app)
-        .delete(`/api/tasks/${validUUID}`)
-        .expect(200);
+      const response = await request(app).delete(`/api/tasks/${validUUID}`).expect(200);
 
       // Assert
       expect(response.body.success).toBe(true);
@@ -319,9 +302,7 @@ describe("Task API Integration Tests", () => {
       });
 
       // Act
-      const response = await request(app)
-        .delete(`/api/tasks/${validUUID}`)
-        .expect(404);
+      const response = await request(app).delete(`/api/tasks/${validUUID}`).expect(404);
 
       // Assert
       expect(response.body.success).toBe(false);

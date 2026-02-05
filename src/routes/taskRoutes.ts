@@ -204,13 +204,7 @@ router.get("/:id", validateTaskId, TaskController.getTaskById);
  *       429:
  *         $ref: '#/components/responses/RateLimitError'
  */
-router.post(
-  "/",
-  authenticate,
-  createTaskLimiter,
-  validateCreateTask,
-  TaskController.createTask,
-);
+router.post("/", authenticate, createTaskLimiter, validateCreateTask, TaskController.createTask);
 
 // PUT /api/tasks/:id
 // Update existing task (Protected)
@@ -258,13 +252,7 @@ router.post(
  *       404:
  *         $ref: '#/components/responses/NotFoundError'
  */
-router.put(
-  "/:id",
-  authenticate,
-  validateTaskId,
-  validateUpdateTask,
-  TaskController.updateTask,
-);
+router.put("/:id", authenticate, validateTaskId, validateUpdateTask, TaskController.updateTask);
 
 // DELETE /api/tasks/:id
 // Delete task (Protected)

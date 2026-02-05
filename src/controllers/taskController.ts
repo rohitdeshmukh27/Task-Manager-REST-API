@@ -24,12 +24,15 @@ export const getAllTasks = asyncHandler(
       status: req.query.status as any,
       priority: req.query.priority as any,
       search: req.query.search as string,
-      sort_by: req.query.sort_by as "created_at" | "updated_at" | "due_date" | "priority" | undefined,
+      sort_by: req.query.sort_by as
+        | "created_at"
+        | "updated_at"
+        | "due_date"
+        | "priority"
+        | undefined,
       order: req.query.order as "asc" | "desc",
       limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-      offset: req.query.offset
-        ? parseInt(req.query.offset as string)
-        : undefined,
+      offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
     };
 
     const { data, error, count } = await TaskService.getAllTasks(queryParams);
@@ -52,7 +55,7 @@ export const getAllTasks = asyncHandler(
     };
 
     res.status(200).json(response);
-  },
+  }
 );
 
 // ==========================================
@@ -92,7 +95,7 @@ export const getTaskById = asyncHandler(
     };
 
     res.status(200).json(response);
-  },
+  }
 );
 
 // ==========================================
@@ -122,7 +125,7 @@ export const createTask = asyncHandler(
     };
 
     res.status(201).json(response);
-  },
+  }
 );
 
 // ==========================================
@@ -163,7 +166,7 @@ export const updateTask = asyncHandler(
     };
 
     res.status(200).json(response);
-  },
+  }
 );
 
 // ==========================================
@@ -203,7 +206,7 @@ export const deleteTask = asyncHandler(
     };
 
     res.status(200).json(response);
-  },
+  }
 );
 
 // ==========================================
@@ -231,5 +234,5 @@ export const getTaskStats = asyncHandler(
     };
 
     res.status(200).json(response);
-  },
+  }
 );

@@ -48,8 +48,7 @@ export const generalLimiter: RateLimitRequestHandler = rateLimit({
     res.status(429).json({
       success: false,
       message: "Too many requests, please try again later.",
-      error:
-        "You have exceeded the rate limit. Please wait before making more requests",
+      error: "You have exceeded the rate limit. Please wait before making more requests",
       retryAfter: res.getHeader("Retry-After"),
     });
   },
