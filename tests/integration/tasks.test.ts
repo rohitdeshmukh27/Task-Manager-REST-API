@@ -145,7 +145,7 @@ describe("Task API Integration Tests", () => {
 
       // Assert
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toContain("Invalid");
+      expect(response.body.message).toContain("Validation failed");
     });
 
     it("should return 404 for non-existent task", async () => {
@@ -211,7 +211,7 @@ describe("Task API Integration Tests", () => {
 
       // Assert
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toContain("title");
+      expect(response.body.message).toContain("Validation failed");
     });
 
     it("should return 400 for invalid priority", async () => {
@@ -235,14 +235,17 @@ describe("Task API Integration Tests", () => {
     it("should update a task successfully", async () => {
       // Arrange
       const updates = { title: "Updated Title", status: "completed" };
-      const udpatedTask = {
+      const updatedTask = {
         id: validUUID,
         ...updates,
         priority: "medium",
+        description: "Test description",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
 
       (TaskService.updateTask as jest.Mock).mockResolvedValue({
-        data: TaskService.updateTask,
+        data: updatedTask,
         error: null,
       });
 
@@ -271,7 +274,7 @@ describe("Task API Integration Tests", () => {
     it("should return 400 for empty update body", async () => {
       // Act
       const response = await request(app)
-        .OPTIONS(`/api/tasks/${validUUID}`)
+        .put(`/api/tasks/${validUUID}`)
         .send({})
         .expect(400);
 

@@ -2,55 +2,55 @@
 
 module.exports = {
   // Use ts-jest present for typescript
-  present: "ts-jest",
+  preset: "ts-jest",
 
-  // Test environment 
+  // Test environment
   testEnvironment: "node",
 
   // Root directory for tests
-  roots:["<rootDir>/tests"],
+  roots: ["<rootDir>/tests"],
 
   // Files patterns to match for tests
-  testMatch:["**/*.test.ts","**/*.spec.ts"],
+  testMatch: ["**/*.test.ts", "**/*.spec.ts"],
 
   // Module file extension
-  moduleFileExtensions: ["ts","js","json"],
+  moduleFileExtensions: ["ts", "js", "json"],
 
   // Coverage configuration
-  collectCoverage:true,
+  collectCoverage: true,
   coverageDirectory: "coverage",
-  coverageReporters:["text","lcov","html"],
-  collectCoverageFrom:[
+  coverageReporters: ["text", "lcov", "html"],
+  collectCoverageFrom: [
     "src//**/*.ts",
     "!src/**/*.d.ts",
     "!src/app.ts", // Exculde entry points
   ],
 
   // Coverage thresholds (enforce minumum coverage)
-  coverageThreshold:{
-    global:{
+  coverageThreshold: {
+    global: {
       branches: 60,
       function: 60,
       lines: 60,
-      statements:60,
+      statements: 60,
     },
   },
 
   // Setup file to run before tests
-  setupFilesAfterEnv:["<riitDir>/tests/setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
 
   // Clear mocks between tests
-  clearMocks:true,
+  clearMocks: true,
 
   // Verbose output
-  verbose:true,
+  verbose: true,
 
   // Timeout for each test (in ms)
   testTimeout: 10000,
 
   // Transform Typescript files
-  transform:{
-    "^.+\\.ts$":[
+  transform: {
+    "^.+\\.ts$": [
       "ts-jest",
       {
         tsconfig: "tsconfig.json",
@@ -59,7 +59,7 @@ module.exports = {
   },
 
   // Module path aliases (if using)
-  moduleNameMapper:{
-    "^@/(.*)$":"<rootDir>/src/$1",
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
 };
