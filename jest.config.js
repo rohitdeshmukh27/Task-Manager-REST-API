@@ -21,9 +21,9 @@ module.exports = {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
   collectCoverageFrom: [
-    "src//**/*.ts",
+    "src/**/*.ts",
     "!src/**/*.d.ts",
-    "!src/app.ts", // Exculde entry points
+    "!src/app.ts", // Exclude entry points
   ],
 
   // Coverage thresholds (enforce minumum coverage)
