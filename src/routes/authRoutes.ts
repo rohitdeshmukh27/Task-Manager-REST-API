@@ -11,11 +11,7 @@ import {
   validateForgotPassword,
   validateResetPassword,
 } from "../middleware/validateAuth";
-import {
-  authLimiter,
-  signupLimiter,
-  passwordResetLimiter,
-} from "../config/rateLimiter";
+import { authLimiter, signupLimiter, passwordResetLimiter } from "../config/rateLimiter";
 
 // Create router instance
 const router = Router();
@@ -38,7 +34,7 @@ router.post(
   "/forgot-password",
   passwordResetLimiter,
   validateForgotPassword,
-  AuthController.forgotPassword,
+  AuthController.forgotPassword
 );
 
 // POST /api/auth/refresh
@@ -60,11 +56,6 @@ router.post("/logout", authenticate, AuthController.logout);
 router.get("/me", authenticate, AuthController.getCurrentUser);
 
 // POST /api/auth/reset-password
-router.post(
-  "/reset-password",
-  authenticate,
-  validateResetPassword,
-  AuthController.resetPassword,
-);
+router.post("/reset-password", authenticate, validateResetPassword, AuthController.resetPassword);
 
 export default router;

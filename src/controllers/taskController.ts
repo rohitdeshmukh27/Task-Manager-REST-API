@@ -2,7 +2,7 @@
 // TASK CONTROLLER - Request Handlers
 // =====================
 
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 import {
   Task,
   CreateTaskDTO,
@@ -11,33 +11,28 @@ import {
   ApiResponse,
 } from "../interfaces/task.interface";
 import * as TaskService from "../services/taskService";
-import { REPL_MODE_STRICT } from "node:repl";
-/* 
-=====================
-    GET ALL TASKS
-=====================
+import { asyncHandler } from "../middleware/errorHandler";
 
-GET /api/tasks
-Query params: ?status=completed&priority=high&search=keyword&sort_by=created_at&order=desc&limit=10&offset=0
-*/
+// ==========================================
+// GET ALL TASKS
+// ==========================================
+// No try-catch needed! asyncHandler handles errors automatically
 
-export const getAllTasks = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    //extract query parameters
+export const getAllTasks = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const queryParams: TaskQueryParams = {
       status: req.query.status as any,
       priority: req.query.priority as any,
-      search: req.query.search as any,
-      sort_by: req.query.sort_by as any,
-      order: req.query.order as any,
+      search: req.query.search as string,
+      sort_by: req.query.sort_by as
+        | "created_at"
+        | "updated_at"
+        | "due_date"
+        | "priority"
+        | undefined,
+      order: req.query.order as "asc" | "desc",
       limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-      offset: req.query.offset
-        ? parseInt(req.query.offset as string)
-        : undefined,
+      offset: req.query.offset ? parseInt(req.query.offset as string) : undefined,
     };
 
     const { data, error, count } = await TaskService.getAllTasks(queryParams);
@@ -60,31 +55,34 @@ export const getAllTasks = async (
     };
 
     res.status(200).json(response);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
-// ====================
-// GET TASK by ID
-// ====================
+// ==========================================
+// GET TASK BY ID
+// ==========================================
 
-// GET /api/tasks/:id
-export const getTaskById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const id = req.params.id as string;
+export const getTaskById = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { id } = req.params;
 
-    const { data, error } = await TaskService.getTaskById(id);
+    const { data, error } = await TaskService.getTaskById(id as string);
 
-    if (error || !data) {
+    if (error) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to fetch task",
+        error: error.message,
+      };
+      res.status(500).json(response);
+      return;
+    }
+
+    if (!data) {
       const response: ApiResponse<null> = {
         success: false,
         message: "Task not found",
-        error: `No task found with id: ${id}`,
+        error: `No task found with ID: ${id}`,
       };
       res.status(404).json(response);
       return;
@@ -92,29 +90,20 @@ export const getTaskById = async (
 
     const response: ApiResponse<Task> = {
       success: true,
-      message: "task retrieved successfully",
+      message: "Task retrieved successfully",
       data,
     };
 
     res.status(200).json(response);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
-// ==========================
-// CREATE NEW TASK
-// ==========================
+// ==========================================
+// CREATE TASK
+// ==========================================
 
-// POST /api/tasks
-// Body : {title,description?,priority?,due_date?}
-
-export const createTask = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
+export const createTask = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const taskData: CreateTaskDTO = req.body;
 
     const { data, error } = await TaskService.createTask(taskData);
@@ -125,95 +114,87 @@ export const createTask = async (
         message: "Failed to create task",
         error: error.message,
       };
-      res.status(400).json(response);
+      res.status(500).json(response);
       return;
     }
 
     const response: ApiResponse<Task> = {
       success: true,
-      message: "task created successfully",
+      message: "Task created successfully",
       data: data!,
     };
+
     res.status(201).json(response);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
-// ===============================
-// update task
-// ===============================
+// ==========================================
+// UPDATE TASK
+// ==========================================
 
-// put api/tasks/:id
-// Body: {title?,description?,status?,priority?,due_date?}
-
-export const updateTask = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const id = req.params.id as string;
+export const updateTask = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { id } = req.params;
     const updates: UpdateTaskDTO = req.body;
 
-    //check if task exists first
-    const { data: exisitingTask } = await TaskService.getTaskById(id);
+    const { data, error } = await TaskService.updateTask(id as string, updates);
 
-    if (!exisitingTask) {
-      const response: ApiResponse<null> = {
-        success: false,
-        message: "task not found",
-        error: `no task found with id ${id}`,
-      };
-      res.status(404).json(response);
-      return;
-    }
-
-    const { data, error } = await TaskService.updateTask(id, updates);
     if (error) {
       const response: ApiResponse<null> = {
         success: false,
-        message: "failed to update task",
+        message: "Failed to update task",
         error: error.message,
       };
-      res.status(400).json(response);
+      res.status(500).json(response);
+      return;
+    }
+
+    if (!data) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Task not found",
+        error: `No task found with ID: ${id}`,
+      };
+      res.status(404).json(response);
       return;
     }
 
     const response: ApiResponse<Task> = {
       success: true,
       message: "Task updated successfully",
-      data: data!,
+      data,
     };
 
     res.status(200).json(response);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
-// ====================================
+// ==========================================
 // DELETE TASK
-// ====================================
-// DELETE /api/tasks/:id
+// ==========================================
 
-export const deleteTask = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const id = req.params.id as string;
+export const deleteTask = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { id } = req.params;
 
-    const { data, error } = await TaskService.deleteTask(id);
+    const { data, error } = await TaskService.deleteTask(id as string);
 
-    if (error || !data) {
+    if (error) {
+      const response: ApiResponse<null> = {
+        success: false,
+        message: "Failed to delete task",
+        error: error.message,
+      };
+      res.status(500).json(response);
+      return;
+    }
+
+    if (!data) {
       const response: ApiResponse<null> = {
         success: false,
         message: "Task not found",
-        error: `No task found with ID : ${id}`,
+        error: `No task found with ID: ${id}`,
       };
-
       res.status(404).json(response);
       return;
     }
@@ -225,41 +206,33 @@ export const deleteTask = async (
     };
 
     res.status(200).json(response);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
-// =======================
-// GET TASK STATISTICS
-// =======================
+// ==========================================
+// GET TASK STATS
+// ==========================================
 
-// GET /api/tasks/stats
-
-export const getTaskStats = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
+export const getTaskStats = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const stats = await TaskService.getTaskStats();
 
     if (!stats) {
       const response: ApiResponse<null> = {
         success: false,
-        message: "Failed to get statistics",
-        error: "Could not retrieve task statistics",
+        message: "Failed to fetch task statistics",
+        error: "Could not retrieve stats",
       };
       res.status(500).json(response);
       return;
     }
 
-    res.status(200).json({
+    const response: ApiResponse<typeof stats> = {
       success: true,
-      message: "Task statistics retrieved",
+      message: "Task statistics retrieved successfully",
       data: stats,
-    });
-  } catch (error) {
-    next(error);
+    };
+
+    res.status(200).json(response);
   }
-};
+);

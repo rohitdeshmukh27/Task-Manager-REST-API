@@ -38,16 +38,8 @@ export const generalLimiter: RateLimitRequestHandler = rateLimit({
     return false;
   },
 
-  // Custom key generate (default is IP address)
-  keyGenerator: (req: Request) => {
-    // Use X-Forwarded-For header if behind proxy, otherwise use IP
-    return (
-      req.ip ||
-      req.headers["X-forwarded-for"]?.toString() ||
-      req.socket.remoteAddress ||
-      "unknown"
-    );
-  },
+  // Note: Using default keyGenerator (IP address) which properly handles IPv6
+  // If you need custom logic, use the standardHeaders and legacyHeaders options
 
   // Handler when rate limit is exceeded
   handler: (req: Request, res: Response) => {
@@ -56,8 +48,7 @@ export const generalLimiter: RateLimitRequestHandler = rateLimit({
     res.status(429).json({
       success: false,
       message: "Too many requests, please try again later.",
-      error:
-        "You have exceeded the rate limit. Please wait before making more requests",
+      error: "You have exceeded the rate limit. Please wait before making more requests",
       retryAfter: res.getHeader("Retry-After"),
     });
   },

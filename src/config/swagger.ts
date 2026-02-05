@@ -1,0 +1,373 @@
+// ============================================
+// SWAGGER CONFIGURATION - API Documentation
+// ============================================
+
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import { Application } from "express";
+
+/**
+ * Swagger/OpenAPI configuration
+ */
+const swaggerOptions: swaggerJsdoc.Options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Task Manager REST API",
+      version: "1.0.0",
+      description: `
+A complete Task Manager REST API built with Node.js, Express, TypeScript, and Supabase.
+
+## Features
+- 📋 Full CRUD operations for tasks
+- 🔐 JWT-based authentication
+- 🛡️ Rate limiting and security headers
+- 📊 Task statistics and filtering
+
+## Authentication
+Most endpoints require authentication via JWT token.
+Include the token in the Authorization header:
+\`\`\`
+Authorization: Bearer <your-access-token>
+\`\`\`
+      `,
+      contact: {
+        name: "API Support",
+        email: "support@taskmanager.com",
+      },
+      license: {
+        name: "MIT",
+        url: "https://opensource.org/licenses/MIT",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development server",
+      },
+      {
+        url: "https://api.taskmanager.com",
+        description: "Production server",
+      },
+    ],
+    tags: [
+      {
+        name: "Tasks",
+        description: "Task management endpoints",
+      },
+      {
+        name: "Authentication",
+        description: "User authentication endpoints",
+      },
+      {
+        name: "Health",
+        description: "API health check endpoints",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Enter your JWT token",
+        },
+      },
+      schemas: {
+        // Task Schema
+        Task: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              format: "uuid",
+              description: "Unique task identifier",
+              example: "123e4567-e89b-12d3-a456-426614174000",
+            },
+            title: {
+              type: "string",
+              description: "Task title",
+              example: "Complete project documentation",
+            },
+            description: {
+              type: "string",
+              nullable: true,
+              description: "Detailed task description",
+              example: "Write comprehensive API documentation with examples",
+            },
+            status: {
+              type: "string",
+              enum: ["pending", "in-progress", "completed"],
+              description: "Current task status",
+              example: "pending",
+            },
+            priority: {
+              type: "string",
+              enum: ["low", "medium", "high"],
+              description: "Task priority level",
+              example: "medium",
+            },
+            due_date: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+              description: "Task due date",
+              example: "2024-12-31T23:59:59Z",
+            },
+            created_at: {
+              type: "string",
+              format: "date-time",
+              description: "Creation timestamp",
+            },
+            updated_at: {
+              type: "string",
+              format: "date-time",
+              description: "Last update timestamp",
+            },
+          },
+        },
+        // Create Task DTO
+        CreateTaskDTO: {
+          type: "object",
+          required: ["title"],
+          properties: {
+            title: {
+              type: "string",
+              minLength: 1,
+              maxLength: 255,
+              description: "Task title (required)",
+              example: "New Task",
+            },
+            description: {
+              type: "string",
+              description: "Task description (optional)",
+              example: "Task details here",
+            },
+            priority: {
+              type: "string",
+              enum: ["low", "medium", "high"],
+              default: "medium",
+              description: "Task priority (optional)",
+            },
+            due_date: {
+              type: "string",
+              format: "date",
+              description: "Due date in ISO format (optional)",
+              example: "2024-12-31",
+            },
+          },
+        },
+        // Update Task DTO
+        UpdateTaskDTO: {
+          type: "object",
+          minProperties: 1,
+          properties: {
+            title: {
+              type: "string",
+              minLength: 1,
+              maxLength: 255,
+            },
+            description: {
+              type: "string",
+            },
+            status: {
+              type: "string",
+              enum: ["pending", "in-progress", "completed"],
+            },
+            priority: {
+              type: "string",
+              enum: ["low", "medium", "high"],
+            },
+            due_date: {
+              type: "string",
+              format: "date",
+            },
+          },
+        },
+        // User Schema
+        User: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              format: "uuid",
+            },
+            email: {
+              type: "string",
+              format: "email",
+            },
+            email_confirmed_at: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+            },
+            created_at: {
+              type: "string",
+              format: "date-time",
+            },
+          },
+        },
+        // Login DTO
+        LoginDTO: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: {
+              type: "string",
+              format: "email",
+              example: "user@example.com",
+            },
+            password: {
+              type: "string",
+              minLength: 6,
+              example: "SecurePassword123",
+            },
+          },
+        },
+        // Signup DTO
+        SignupDTO: {
+          type: "object",
+          required: ["email", "password"],
+          properties: {
+            email: {
+              type: "string",
+              format: "email",
+              example: "newuser@example.com",
+            },
+            password: {
+              type: "string",
+              minLength: 6,
+              example: "SecurePassword123",
+            },
+            name: {
+              type: "string",
+              example: "John Doe",
+            },
+          },
+        },
+        // API Response
+        ApiResponse: {
+          type: "object",
+          properties: {
+            success: {
+              type: "boolean",
+            },
+            message: {
+              type: "string",
+            },
+            data: {
+              type: "object",
+            },
+            error: {
+              type: "string",
+            },
+          },
+        },
+        // Error Response
+        ErrorResponse: {
+          type: "object",
+          properties: {
+            success: {
+              type: "boolean",
+              example: false,
+            },
+            message: {
+              type: "string",
+              example: "An error occurred",
+            },
+            error: {
+              type: "string",
+              example: "Error details here",
+            },
+          },
+        },
+      },
+      responses: {
+        UnauthorizedError: {
+          description: "Access token is missing or invalid",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ErrorResponse",
+              },
+              example: {
+                success: false,
+                message: "Unauthorized",
+                error: "No token provided",
+              },
+            },
+          },
+        },
+        NotFoundError: {
+          description: "Resource not found",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ErrorResponse",
+              },
+            },
+          },
+        },
+        ValidationError: {
+          description: "Validation failed",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ErrorResponse",
+              },
+            },
+          },
+        },
+        RateLimitError: {
+          description: "Too many requests",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ErrorResponse",
+              },
+              example: {
+                success: false,
+                message: "Too many requests",
+                error: "Rate limit exceeded. Please wait.",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  // Path to the API docs
+  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"],
+};
+
+// Generate OpenAPI specification
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+/**
+ * Setup Swagger documentation
+ */
+export const setupSwagger = (app: Application): void => {
+  // Swagger UI options
+  const swaggerUiOptions: swaggerUi.SwaggerUiOptions = {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Task Manager API Docs",
+  };
+
+  // Serve Swagger UI
+  app.use(
+    "/api/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, swaggerUiOptions),
+  );
+
+  // Serve raw OpenAPI spec as JSON
+  app.get("/api/docs.json", (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(swaggerSpec);
+  });
+
+  console.log("📚 Swagger docs available at /api/docs");
+};
+
+export default swaggerSpec;
