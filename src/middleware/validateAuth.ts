@@ -4,7 +4,7 @@ import { response } from "express";
 // ============================
 
 import { Request, Response, NextFunction } from "express";
-import { AuthResponse } from "../interfaces/auth.interface";
+import { AuthResponse } from "../interfaces/auth.interface.js";
 
 /**
  * Validate signu request body

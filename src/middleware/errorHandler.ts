@@ -3,7 +3,7 @@
 // ==============================
 
 import { Request, Response, NextFunction } from "express";
-import { ApiResponse } from "../interfaces/task.interface";
+import { ApiResponse } from "../interfaces/task.interface.js";
 
 // Custom error class with status code
 export class AppError extends Error {

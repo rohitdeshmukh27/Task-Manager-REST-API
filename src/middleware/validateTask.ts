@@ -4,7 +4,7 @@
 
 
 import { Request,Response ,NextFunction} from 'express';
-import { ApiResponse,Priority,TaskStatus } from '../interfaces/task.interface';
+import { ApiResponse,Priority,TaskStatus } from '../interfaces/task.interface.js';
 
 // valid values for validation
 const VALID_PRIORITIES: Priority[] = ['low','medium','high'];

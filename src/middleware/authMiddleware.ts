@@ -3,8 +3,8 @@
 // ===============================================
 
 import { Request, Response, NextFunction, response } from "express";
-import * as AuthService from "../services/authService";
-import { User, AuthResponse } from "../interfaces/auth.interface";
+import * as AuthService from "../services/authService.js";
+import { User, AuthResponse } from "../interfaces/auth.interface.js";
 import { resourceLimits } from "node:worker_threads";
 
 // Extend Express Request type to include user
