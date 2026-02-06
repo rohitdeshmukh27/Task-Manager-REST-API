@@ -9,9 +9,9 @@ import {
   UpdateTaskDTO,
   TaskQueryParams,
   ApiResponse,
-} from "../interfaces/task.interface";
-import * as TaskService from "../services/taskService";
-import { asyncHandler } from "../middleware/errorHandler";
+} from "../interfaces/task.interface.js";
+import * as TaskService from "../services/taskService.js";
+import { asyncHandler } from "../middleware/errorHandler.js";
 
 // ==========================================
 // GET ALL TASKS

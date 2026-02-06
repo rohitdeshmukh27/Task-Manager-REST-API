@@ -3,15 +3,15 @@
 // =============================
 
 import { Router } from "express";
-import * as TaskController from "../controllers/taskController";
+import * as TaskController from "../controllers/taskController.js";
 import {
   validateCreateTask,
   validateUpdateTask,
   validateTaskId,
   validateQueryParams,
-} from "../middleware/validateTask";
-import { authenticate } from "../middleware/authMiddleware";
-import { createTaskLimiter } from "../config/rateLimiter";
+} from "../middleware/validateTask.js";
+import { authenticate } from "../middleware/authMiddleware.js";
+import { createTaskLimiter } from "../config/rateLimiter.js";
 
 // Create router instance
 const router = Router();

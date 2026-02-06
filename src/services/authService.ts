@@ -2,14 +2,14 @@
 // AUTH SERVICE - Supabase Authentication Operations
 // =================================================
 
-import supabase from "../config/supabase";
+import supabase from "../config/supabase.js";
 import {
   User,
   Session,
   SignupDTO,
   LoginDTO,
   ForgotPasswordDTO,
-} from "../interfaces/auth.interface";
+} from "../interfaces/auth.interface.js";
 
 /*
 Register a new user

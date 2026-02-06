@@ -6,13 +6,14 @@ import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
 
 // Route imports
-import taskRoutes from "./routes/taskRoutes";
-import authRoutes from "./routes/authRoutes";
+import taskRoutes from "./routes/taskRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 // Middleware imports
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
-import { applySecurityMiddleware } from "./middleware/security";
-import { generalLimiter } from "./config/rateLimiter";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+import { applySecurityMiddleware } from "./middleware/security.js";
+import { generalLimiter } from "./config/rateLimiter.js";
+import { setupSwagger } from "./config/swagger.js";
 
 // Load environment variables FIRST
 dotenv.config();
@@ -47,10 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req: Request, res: Response, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS",
-  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
@@ -59,6 +57,12 @@ app.use((req: Request, res: Response, next) => {
   }
   next();
 });
+
+// ===========================
+// SWAGGER API DOCUMENTATION
+// ===========================
+
+setupSwagger(app);
 
 // ==================
 // ROUTES
@@ -71,7 +75,7 @@ app.get("/", (req: Request, res: Response) => {
     message: "🚀 Task Manager API is running!",
     version: "1.0.0",
     environment: NODE_ENV,
-    documentation: "/api",
+    documentation: "/api/docs",
   });
 });
 

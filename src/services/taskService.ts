@@ -2,13 +2,13 @@
 // TASK SERVICE - Database Operations
 // ============================
 
-import supabase from "../config/supabase";
+import supabase from "../config/supabase.js";
 import {
   Task,
   CreateTaskDTO,
   UpdateTaskDTO,
   TaskQueryParams,
-} from "../interfaces/task.interface";
+} from "../interfaces/task.interface.js";
 
 //table name constant
 const TABLE_NAME = "tasks";

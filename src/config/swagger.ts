@@ -5,6 +5,11 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { Application } from "express";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Swagger/OpenAPI configuration
@@ -335,9 +340,597 @@ Authorization: Bearer <your-access-token>
         },
       },
     },
+    // ============================================
+    // PATHS - API Endpoints
+    // ============================================
+    paths: {
+      "/api/auth/signup": {
+        post: {
+          summary: "Register a new user",
+          tags: ["Authentication"],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/SignupDTO",
+                },
+                example: {
+                  email: "newuser@example.com",
+                  password: "MyPassword123",
+                },
+              },
+            },
+          },
+          responses: {
+            "201": {
+              description: "User registered successfully",
+            },
+            "400": {
+              description: "Validation error",
+            },
+            "429": {
+              description: "Rate limit exceeded (3 requests per hour)",
+            },
+          },
+        },
+      },
+      "/api/auth/login": {
+        post: {
+          summary: "Login user and get JWT token",
+          tags: ["Authentication"],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/LoginDTO",
+                },
+                example: {
+                  email: "user@example.com",
+                  password: "MyPassword123",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Login successful - Returns access_token",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                      data: {
+                        type: "object",
+                        properties: {
+                          user: {
+                            $ref: "#/components/schemas/User",
+                          },
+                          session: {
+                            type: "object",
+                            properties: {
+                              access_token: { type: "string" },
+                              token_type: { type: "string" },
+                              expires_in: { type: "number" },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "401": {
+              description: "Invalid credentials",
+            },
+            "429": {
+              description: "Rate limit exceeded (5 requests per 15 minutes)",
+            },
+          },
+        },
+      },
+      "/api/auth/logout": {
+        post: {
+          summary: "Logout user",
+          tags: ["Authentication"],
+          security: [{ bearerAuth: [] }],
+          responses: {
+            "200": {
+              description: "Logout successful",
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+          },
+        },
+      },
+      "/api/auth/me": {
+        get: {
+          summary: "Get current user profile",
+          tags: ["Authentication"],
+          security: [{ bearerAuth: [] }],
+          responses: {
+            "200": {
+              description: "User profile retrieved",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                      data: {
+                        $ref: "#/components/schemas/User",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+          },
+        },
+      },
+      "/api/auth/forgot-password": {
+        post: {
+          summary: "Request password reset email",
+          tags: ["Authentication"],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["email"],
+                  properties: {
+                    email: {
+                      type: "string",
+                      format: "email",
+                    },
+                  },
+                },
+                example: {
+                  email: "user@example.com",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Password reset email sent",
+            },
+            "429": {
+              description: "Rate limit exceeded (3 requests per hour)",
+            },
+          },
+        },
+      },
+      "/api/auth/refresh": {
+        post: {
+          summary: "Refresh access token",
+          tags: ["Authentication"],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["refresh_token"],
+                  properties: {
+                    refresh_token: {
+                      type: "string",
+                    },
+                  },
+                },
+                example: {
+                  refresh_token: "your-refresh-token-here",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Token refreshed successfully",
+            },
+            "401": {
+              description: "Invalid refresh token",
+            },
+          },
+        },
+      },
+      "/api/auth/reset-password": {
+        post: {
+          summary: "Reset password",
+          tags: ["Authentication"],
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["password"],
+                  properties: {
+                    password: {
+                      type: "string",
+                      minLength: 6,
+                    },
+                  },
+                },
+                example: {
+                  password: "NewSecurePassword123",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Password reset successful",
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+          },
+        },
+      },
+      "/api/auth/resend-verification": {
+        post: {
+          summary: "Resend email verification",
+          tags: ["Authentication"],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["email"],
+                  properties: {
+                    email: {
+                      type: "string",
+                      format: "email",
+                    },
+                  },
+                },
+                example: {
+                  email: "user@example.com",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Verification email sent",
+            },
+          },
+        },
+      },
+      // ============================================
+      // TASK ENDPOINTS
+      // ============================================
+      "/api/tasks": {
+        get: {
+          summary: "Get all tasks",
+          description: "Retrieve all tasks with optional filtering, sorting, and pagination",
+          tags: ["Tasks"],
+          parameters: [
+            {
+              in: "query",
+              name: "status",
+              schema: {
+                type: "string",
+                enum: ["pending", "in-progress", "completed"],
+              },
+              description: "Filter by task status",
+            },
+            {
+              in: "query",
+              name: "priority",
+              schema: {
+                type: "string",
+                enum: ["low", "medium", "high"],
+              },
+              description: "Filter by task priority",
+            },
+            {
+              in: "query",
+              name: "search",
+              schema: {
+                type: "string",
+              },
+              description: "Search in title and description",
+            },
+            {
+              in: "query",
+              name: "sort_by",
+              schema: {
+                type: "string",
+                enum: ["created_at", "updated_at", "due_date", "priority"],
+              },
+              description: "Field to sort by",
+            },
+            {
+              in: "query",
+              name: "order",
+              schema: {
+                type: "string",
+                enum: ["asc", "desc"],
+              },
+              description: "Sort order",
+            },
+            {
+              in: "query",
+              name: "limit",
+              schema: {
+                type: "integer",
+                minimum: 1,
+                maximum: 100,
+              },
+              description: "Number of results to return",
+            },
+            {
+              in: "query",
+              name: "offset",
+              schema: {
+                type: "integer",
+                minimum: 0,
+              },
+              description: "Number of results to skip",
+            },
+          ],
+          responses: {
+            "200": {
+              description: "List of tasks",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                      data: {
+                        type: "array",
+                        items: {
+                          $ref: "#/components/schemas/Task",
+                        },
+                      },
+                      count: { type: "integer" },
+                    },
+                  },
+                },
+              },
+            },
+            "400": {
+              $ref: "#/components/responses/ValidationError",
+            },
+          },
+        },
+        post: {
+          summary: "Create a new task",
+          description: "Create a new task (requires authentication)",
+          tags: ["Tasks"],
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CreateTaskDTO",
+                },
+              },
+            },
+          },
+          responses: {
+            "201": {
+              description: "Task created successfully",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                      data: {
+                        $ref: "#/components/schemas/Task",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "400": {
+              $ref: "#/components/responses/ValidationError",
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+            "429": {
+              $ref: "#/components/responses/RateLimitError",
+            },
+          },
+        },
+      },
+      "/api/tasks/stats": {
+        get: {
+          summary: "Get task statistics",
+          description: "Retrieve statistics about all tasks (counts by status, priority, etc.)",
+          tags: ["Tasks"],
+          responses: {
+            "200": {
+              description: "Task statistics",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      data: {
+                        type: "object",
+                        properties: {
+                          total: { type: "integer" },
+                          byStatus: { type: "object" },
+                          byPriority: { type: "object" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "/api/tasks/{id}": {
+        get: {
+          summary: "Get task by ID",
+          description: "Retrieve a single task by its UUID",
+          tags: ["Tasks"],
+          parameters: [
+            {
+              in: "path",
+              name: "id",
+              required: true,
+              schema: {
+                type: "string",
+                format: "uuid",
+              },
+              description: "Task UUID",
+            },
+          ],
+          responses: {
+            "200": {
+              description: "Task details",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      data: {
+                        $ref: "#/components/schemas/Task",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "400": {
+              $ref: "#/components/responses/ValidationError",
+            },
+            "404": {
+              $ref: "#/components/responses/NotFoundError",
+            },
+          },
+        },
+        put: {
+          summary: "Update a task",
+          description: "Update an existing task by ID (requires authentication)",
+          tags: ["Tasks"],
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              in: "path",
+              name: "id",
+              required: true,
+              schema: {
+                type: "string",
+                format: "uuid",
+              },
+              description: "Task UUID",
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UpdateTaskDTO",
+                },
+              },
+            },
+          },
+          responses: {
+            "200": {
+              description: "Task updated successfully",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                      data: {
+                        $ref: "#/components/schemas/Task",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "400": {
+              $ref: "#/components/responses/ValidationError",
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+            "404": {
+              $ref: "#/components/responses/NotFoundError",
+            },
+          },
+        },
+        delete: {
+          summary: "Delete a task",
+          description: "Delete a task by ID (requires authentication)",
+          tags: ["Tasks"],
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              in: "path",
+              name: "id",
+              required: true,
+              schema: {
+                type: "string",
+                format: "uuid",
+              },
+              description: "Task UUID",
+            },
+          ],
+          responses: {
+            "200": {
+              description: "Task deleted successfully",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean" },
+                      message: { type: "string" },
+                    },
+                  },
+                },
+              },
+            },
+            "400": {
+              $ref: "#/components/responses/ValidationError",
+            },
+            "401": {
+              $ref: "#/components/responses/UnauthorizedError",
+            },
+            "404": {
+              $ref: "#/components/responses/NotFoundError",
+            },
+          },
+        },
+      },
+    },
   },
-  // Path to the API docs
-  apis: ["./src/routes/*.ts", "./src/controllers/*.ts"],
+  // Don't use apis array - define all paths manually above
+  apis: [],
 };
 
 // Generate OpenAPI specification

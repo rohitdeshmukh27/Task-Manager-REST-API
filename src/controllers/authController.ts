@@ -3,14 +3,14 @@
 // ============================================
 
 import { Request, Response, NextFunction } from "express";
-import * as AuthService from "../services/authService";
+import * as AuthService from "../services/authService.js";
 import {
   SignupDTO,
   LoginDTO,
   AuthResponse,
   User,
   Session,
-} from "../interfaces/auth.interface";
+} from "../interfaces/auth.interface.js";
 
 // ==================
 // SIGNUP
